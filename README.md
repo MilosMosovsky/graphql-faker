@@ -22,12 +22,12 @@ We use `@fake` directive to let you specify how to fake data. And if 60+ fakers 
     type Person {
       name: String @fake(type: firstName)
       gender: String @examples(values: ["male", "female"])
-      pets: [Pet] @sample(min: 0, max: 8)
+      pets: [Pet] @sample(min: 0, max: 8, empty: 0.4)
     }
 
 No need to remember or read any docs. Autocompletion is included!
 
-The `@sample` directive is meant to be used for more fine grained constraints and control such as the range of the number of items to return for a particular property.
+The `@sample` directive is meant to be used for more fine grained constraints and control such as the range of the number of items to return (ie, `min` and `max` for a particular property and the chance for the list to be `empty` (where `0.4` is a 40% chance).
 
 You can also pass an optional `config` object as the second argument to `fakeSchema` with various options for more fine-grained control. See [Customization](./Customization.md) for more details.
 

@@ -13,10 +13,10 @@ fakeSchema(schema, config);
 
 ```js
 const config = {
-  // number of items to generate for arrays/lists
-  // used by @sample
-  sample: {
-    array: {
+  // directive default options
+  directives: {
+    // @sample: range (number) of items to generate for lists
+    sample: {
       min: 1,
       max: 100
     }

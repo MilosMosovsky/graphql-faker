@@ -37,8 +37,10 @@ type ExamplesArgs = {
   values: [any];
 };
 type SampleArgs = {
-  min: number;
-  max: number;
+  min?: number;
+  max?: number;
+  // percentage as: 0 to 1, such as 0.5 for 50% chance
+  empty?: number;
 };
 type DirectiveArgs = {
   fake?: FakeArgs;
@@ -244,23 +246,31 @@ export function fakeSchema(schema: GraphQLSchema, config: any = {}) {
     { sample }: DirectiveArgs,
     config: any = {}
   ) {
-    const sampleOpts = config.sample || config;
-    const array = sampleOpts.array || {};
-    const opts = array.options || {
-      min: 2,
-      max: 10
+    const directives = config.directives || {};
+    let opts = directives.sample || {};
+    const defaultOpts = {
+      min: 1,
+      max: 10,
+      empty: 0.2
     };
+
     const options = {
       ...opts,
-      ...sample
+      ...sample,
+      ...defaultOpts
     } as SampleArgs;
 
-    if (options.min > options.max) {
-      options.max = ++options.min;
+    let { min, max, empty } = options;
+    if (min > max) {
+      max = ++min;
     }
 
     return (...args) => {
-      let length = getRandomInt(options.min, options.max);
+      const rand = Math.random();
+      if (rand < empty) {
+        return [];
+      }
+      let length = getRandomInt(min, max);
       const result = [];
 
       while (length-- !== 0) result.push(itemResolver(...args));
