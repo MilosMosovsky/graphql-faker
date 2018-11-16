@@ -9,11 +9,12 @@ export function validateFunction({ method, functionName, func, data, error }) {
   }
 }
 
-export function matchValue(value, field) {
+export function matchValue(value, name, ctx: any = {}) {
   const regExpPattern =
     typeof value === "string" ? escapeStrRegexp(value) : value;
-  const regExp = new RegExp(regExpPattern, "i");
-  return regExp.test(field);
+  const opts = ctx.regExpOpts || "i";
+  const regExp = new RegExp(regExpPattern, opts);
+  return regExp.test(name);
 }
 
 export function directivesObj(config) {

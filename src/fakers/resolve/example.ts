@@ -8,13 +8,24 @@ function exampleFuns(config) {
 
 const resolveValues = obj => (typeof obj === "string" ? [] : obj.values);
 
-function createKeyMatcher({ fieldMap, type, field, fields, error, config }) {
+function createKeyMatcher({
+  fieldMap,
+  type,
+  name,
+  field,
+  fields,
+  error,
+  config
+}) {
   let matchedValues;
   const example = exampleFuns(config);
   const $resolveExampleValues = example.resolveValues || resolveValues;
-
+  const ctx = { type, name, field, fields, error, config };
   return function matchFakeByKey(key) {
-    const obj = fieldMap[key];
+    let obj = fieldMap[key];
+    // allow more fine grained mapping on type of field
+    obj = obj[type] || obj.default || obj;
+
     if (Array.isArray(obj)) {
       matchedValues = obj;
       return key;
@@ -22,16 +33,14 @@ function createKeyMatcher({ fieldMap, type, field, fields, error, config }) {
     const matches = obj.match || obj.matches || [key];
     if (!Array.isArray(matches)) {
       error(`resolveArray: ${key} missing matches array. Invalid ${matches}`, {
-        type,
-        field,
-        fields,
         key,
         obj,
-        matches
+        matches,
+        ...ctx
       });
     }
     matches.find(value => {
-      if (matchValue(value, field)) {
+      if (matchValue(value, name, ctx)) {
         matchedValues = $resolveExampleValues(obj);
         return value;
       }

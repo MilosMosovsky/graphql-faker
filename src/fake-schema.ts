@@ -218,8 +218,7 @@ export function fakeSchema(schema: GraphQLSchema, config: any = {}) {
       field,
       fields
     };
-    const genRandom = () =>
-      getRandomItem(examples.values, config, { type, field, fields });
+    const genRandom = () => getRandomItem(examples.values, config, ctx);
 
     if (isLeafType(type)) {
       if (examples) return () => genRandom();

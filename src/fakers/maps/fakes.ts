@@ -27,6 +27,14 @@ export const typeMap = {
         maxMoney: 1000,
         decimalPlaces: 2
       }
+    },
+    discount: {
+      type: "money",
+      options: {
+        minMoney: 1,
+        maxMoney: 800,
+        decimalPlaces: 2
+      }
     }
   },
   Address: {
@@ -36,13 +44,14 @@ export const typeMap = {
 };
 
 export const fieldMap = {
-  email: ["mail"],
-  money: ["price", "amount", "value"],
+  email: ["mail", "sender", "receiver", "cc", "bcc"],
+  money: ["price", "amount", "value", "discount"],
   filename: ["file"],
   semver: ["version"],
   fileExtension: ["ext"],
   mimeType: ["mime"],
-  lorem: ["text", "desc"],
+  lorem: ["text", "desc", "description", "content"],
+  word: ["name"],
   words: ["title", "'caption'", "label"],
   jobTitle: ["job"],
   ipv4Address: ["ip"],
@@ -65,7 +74,7 @@ export const fieldMap = {
   firstName: ["first"],
   lastName: ["last"],
   alphaNumeric: ["secret", "key"],
-  recentDate: ["createdAt", "updatedAt", "changedAt"]
+  recentDate: ["created", "updated", "changed", "deleted"]
 };
 
 export const fakes = {
