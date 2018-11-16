@@ -104,7 +104,8 @@ export function resolveFromFieldMap({
   return key ? values : null;
 }
 
-// TODO: split into separate functions for resolving typeMap and fieldMap similar to resolveFake
+// re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
+// Allow `matches` list for both, using `resolveMatches`
 export const resolveExample = ({
   field,
   type,

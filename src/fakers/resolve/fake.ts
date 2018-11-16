@@ -155,7 +155,8 @@ export function resolveFromFieldMap({
   return { value, key };
 }
 
-// TODO: test and make DRY (remove duplication - see resolveFake)
+// re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
+// Allow `matches` list for both, using `resolveMatches`
 export const resolveFake = ({ type, field, fields = [], config = {} }: any) => {
   const maps = config.maps || {};
   const $fakeMaps = maps.fakes || fakeMaps;
