@@ -168,6 +168,19 @@ const myTypeMap = {
         maxMoney: 1000,
         decimalPlaces: 2
       }
+    },
+    created: {
+      __types: {
+        string: {
+          type: "recentData",
+          options: {
+            format: "dd/mm/yyyy"
+          }
+        },
+        date: {
+          type: "recentData"
+        }
+      }
     }
   }
   // ...

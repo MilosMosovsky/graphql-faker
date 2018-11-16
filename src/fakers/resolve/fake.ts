@@ -76,6 +76,7 @@ function createKeyMatcher({
   return function matchFakeByKey(key) {
     let obj = fieldMap[key];
     // allow more fine grained mapping on type of field
+    obj = obj.__types || obj;
     obj = obj[type] || obj.default || obj;
 
     const matches = Array.isArray(obj) ? obj : obj.match || obj.matches;
