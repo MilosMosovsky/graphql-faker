@@ -40,7 +40,7 @@ export function run(opts: any) {
       let defaultFileName = extendUrl
         ? "default-extend.graphql"
         : "default-schema.graphql";
-      userIDL = readIDL(path.join(__dirname, defaultFileName));
+      userIDL = readIDL(path.join(__dirname, "typedefs", defaultFileName));
     }
   }
 

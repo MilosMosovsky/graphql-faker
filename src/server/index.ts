@@ -5,14 +5,14 @@ import { pick } from "lodash";
 import { Source } from "graphql";
 import * as express from "express";
 import * as graphqlHTTP from "express-graphql";
-import { Schema } from "../build-schema";
+import { createSchemaApi } from "../build-schema";
 import * as path from "path";
 import chalk from "chalk";
 
 export function createServerApi({ corsOptions, opts = {}, IDL }: any) {
   const log = console.log;
-  const { saveIDL } = IDL;
-  const { buildServerSchema } = Schema({ IDL });
+  const { saveIDL, readIDL } = IDL;
+  const { buildServerSchema } = createSchemaApi({ readIDL, opts });
   const { forwardHeaders, open, port } = opts;
 
   const forwardHeaderNames = (forwardHeaders || []).map(str =>

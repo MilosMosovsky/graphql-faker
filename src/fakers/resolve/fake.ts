@@ -15,15 +15,21 @@ export const resolveFakeOptions = ({ value }: any = {}) => {
   return typeof value === "string" ? {} : value.options;
 };
 
-function resolveFromTypeFieldMap({
+export function resolveFromTypeFieldMap({
   typeFieldMap,
   type,
   field,
+  fields,
+  fieldType,
+  fieldName,
   resolvers,
   config,
-  error
+  error,
+  log
 }) {
-  const value = typeFieldMap[field];
+  const ctx = { type, field, fieldType, fieldName, fields, error, config, log };
+
+  const value = typeFieldMap[fieldName];
   const { resolveFakeType, resolveFakeOptions } = resolvers;
   if (typeof resolveFakeType !== "function") {
     error(
@@ -53,18 +59,17 @@ function resolveFromTypeFieldMap({
     functionName: "resolveFakeOptions"
   });
 
-  const fakeType = value
-    ? resolveFakeType({ value, type, error, config })
-    : field;
+  const fakeType = value ? resolveFakeType({ value, ...ctx }) : field;
   const options = resolveFakeOptions({ value, error, config }) || {};
   return { type: fakeType, options };
 }
 
-function createKeyMatcher({
+export function createKeyMatcher({
   fieldMap,
   type,
-  name,
   field,
+  fieldName,
+  fieldType,
   fields,
   error,
   config,
@@ -72,12 +77,13 @@ function createKeyMatcher({
 }) {
   // ie. fake definition to be resolved
   let matchedValue;
-  const ctx = { type, name, field, fields, error, config, log };
+  const ctx = { type, fieldName, fieldType, field, fields, error, config, log };
   return function matchFakeByKey(key) {
     let obj = fieldMap[key];
     // allow more fine grained mapping on type of field
+    // TODO: move to common
     obj = obj.__types || obj;
-    obj = obj[type] || obj.default || obj;
+    obj = obj[fieldType] || obj[fieldType.lowercase()] || obj.default || obj;
 
     const matches = Array.isArray(obj) ? obj : obj.match || obj.matches;
     if (!Array.isArray(matches)) {
@@ -92,7 +98,7 @@ function createKeyMatcher({
       );
     }
     matches.find(value => {
-      if (matchValue(value, name, ctx)) {
+      if (matchValue(value, fieldName, ctx)) {
         matchedValue = obj.values;
         return value;
       }
@@ -101,10 +107,12 @@ function createKeyMatcher({
   };
 }
 
-function resolveFromFieldMap({
+export function resolveFromFieldMap({
   fieldMap,
   type,
   name,
+  // fieldName,
+  fieldType,
   field,
   fields,
   log,
@@ -114,7 +122,7 @@ function resolveFromFieldMap({
   const resolvers = config.resolvers || {};
   const fake = resolvers.fake || {};
   const $createKeyMatcher = fake.createKeyMatcher || createKeyMatcher;
-  const ctx = { type, name, field, fields, error, config, log };
+  const ctx = { type, name, field, fieldType, fields, error, config, log };
   validateFunction({
     method: "resolveFieldMap",
     func: $createKeyMatcher,
@@ -137,11 +145,15 @@ function resolveFromFieldMap({
 }
 
 // TODO: test and make DRY (remove duplication - see resolveFake)
-export const resolveFake = ({ type, field, fields, config }) => {
-  const $fakeMaps = config.fakeMaps || fakeMaps;
+export const resolveFake = ({ type, field, fields = [], config = {} }: any) => {
+  const maps = config.maps || {};
+  const $fakeMaps = maps.fakes || fakeMaps;
   const typeMap = $fakeMaps.typeMap || {};
   const fieldMap = $fakeMaps.fieldMap || {};
   const log = config.log || console.log;
+  const fieldType = field.type;
+  const fieldName = field.name;
+
   const typeFieldMap = typeMap[type];
 
   const fake = exampleFuns(config);
@@ -160,7 +172,8 @@ export const resolveFake = ({ type, field, fields, config }) => {
     type,
     field,
     fields,
-    name: field.name
+    fieldType,
+    fieldName
   };
 
   if (typeFieldMap) {

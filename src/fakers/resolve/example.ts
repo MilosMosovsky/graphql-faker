@@ -6,12 +6,13 @@ function exampleFuns(config) {
   return directivesObj(config).example || {};
 }
 
-const resolveValues = obj => (typeof obj === "string" ? [] : obj.values);
+export const resolveValues = obj => (typeof obj === "string" ? [] : obj.values);
 
-function createKeyMatcher({
+export function createKeyMatcher({
   fieldMap,
   type,
-  name,
+  fieldName,
+  fieldType,
   field,
   fields,
   error,
@@ -20,12 +21,12 @@ function createKeyMatcher({
   let matchedValues;
   const example = exampleFuns(config);
   const $resolveExampleValues = example.resolveValues || resolveValues;
-  const ctx = { type, name, field, fields, error, config };
+  const ctx = { type, fieldName, fieldType, field, fields, error, config };
   return function matchFakeByKey(key) {
     let obj = fieldMap[key];
     // allow more fine grained mapping on type of field
     obj = obj.__types || obj;
-    obj = obj[type] || obj.default || obj;
+    obj = obj[fieldType] || obj[fieldType.lowercase()] || obj.default || obj;
 
     if (Array.isArray(obj)) {
       matchedValues = obj;
@@ -41,7 +42,7 @@ function createKeyMatcher({
       });
     }
     matches.find(value => {
-      if (matchValue(value, name, ctx)) {
+      if (matchValue(value, fieldName, ctx)) {
         matchedValues = $resolveExampleValues(obj);
         return value;
       }
@@ -50,14 +51,17 @@ function createKeyMatcher({
   };
 }
 
-function resolveFromFieldMap({
-  config,
-  error,
+export function resolveFromFieldMap({
   fieldMap,
   createKeyMatcher,
   type,
   field,
-  fields
+  fieldName,
+  fieldType,
+  fields,
+  config,
+  error,
+  log
 }) {
   validateFunction({
     method: "resolveExample",
@@ -73,9 +77,12 @@ function resolveFromFieldMap({
     fieldMap,
     type,
     field,
+    fieldName,
+    fieldType,
     fields,
     config,
-    error
+    error,
+    log
   });
   const keys = Object.keys(fieldMap);
   let values;
@@ -88,8 +95,14 @@ function resolveFromFieldMap({
 }
 
 // TODO: split into separate functions for resolving typeMap and fieldMap similar to resolveFake
-export const resolveExample = ({ field, type, fields, config }): any[] => {
-  const $exampleMaps = config.exampleMaps || exampleMaps;
+export const resolveExample = ({
+  field,
+  type,
+  fields = [],
+  config = {}
+}: any): any[] => {
+  const maps = config.maps || {};
+  const $exampleMaps = maps.examples || exampleMaps;
 
   const typeMap = $exampleMaps.typeMap || {};
   const fieldMap = $exampleMaps.fieldMap || {};
@@ -97,6 +110,7 @@ export const resolveExample = ({ field, type, fields, config }): any[] => {
   const typeExamples = typeMap[type] || {};
   const typeFieldMatch = typeExamples[field];
   const $error = config.error || error;
+  const log = config.log || console.log;
 
   if (typeFieldMatch) return typeFieldMatch;
   const example = exampleFuns(config);
@@ -104,9 +118,12 @@ export const resolveExample = ({ field, type, fields, config }): any[] => {
   const ctx = {
     type,
     field,
+    fieldName: field.name,
+    fieldType: field.type,
     fields,
+    config,
     error: $error,
-    config
+    log
   };
 
   return resolveFromFieldMap({

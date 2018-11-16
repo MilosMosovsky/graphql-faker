@@ -32,7 +32,7 @@ const argv = yargs
           "Config: The config file (JSON) that contains optional configuration object",
         type: "string",
         requiresArg: true,
-        default: path.join(__dirname, "default-config.json")
+        default: path.join(__dirname, "defaults", "config.json")
       },
       port: {
         alias: "p",

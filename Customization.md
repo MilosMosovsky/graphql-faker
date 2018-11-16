@@ -146,7 +146,9 @@ type Product {
 - `label` will be resolved to `words`
 - `Product.name` will be resolved to `productName`
 
-You can pass in your own custom `typeMap` and `fieldMap` in the config object
+You can pass in your own custom `typeMap` and `fieldMap` in the config object as demonstrated in the example below:
+
+Note: You can further customize how mapping is done by passing custom resolvers (see further below)
 
 ```js
 const { maps } = require("graphql-faker");
@@ -192,6 +194,14 @@ const examples = {
     Laptop: {
       // takes precedence over color in fieldMap
       color: ["gray", "silver", "black"]
+      status: {
+        __types: {
+          string: {
+            values: ['factory', 'used', 'fixed', 'repair', 'broken']
+          },
+          int: [0,1,2,3,4]
+        }
+      }
     }
   },
   fieldMap: {
@@ -230,8 +240,10 @@ const fakes = {
 };
 
 const config = {
-  fakes,
-  examples
+  maps: {
+    fakes,
+    examples
+  }
 };
 ```
 

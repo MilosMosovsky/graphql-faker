@@ -1,0 +1,9 @@
+{
+  "directives": {
+    "sample": {
+      "min": 1,
+      "max": 10,
+      "empty": 0.2
+    }
+  }
+}
