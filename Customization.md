@@ -210,6 +210,17 @@ const examples = {
       match: ["ticker", "symbol", "stock"],
       values: ticker
     }
+    roles: {
+      match: ["roles", "permissions"],
+      __types: {
+        string: {
+          values: ["read", "create", "update"]
+        },
+        int: {
+          values: [0, 1, 2]
+        }
+      }
+    }
   }
 };
 

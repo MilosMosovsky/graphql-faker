@@ -6,7 +6,16 @@ function exampleFuns(config) {
   return directivesObj(config).example || {};
 }
 
-export const resolveValues = obj => (typeof obj === "string" ? [] : obj.values);
+export const resolveValues = (obj, fieldType?: string) => {
+  if (Array.isArray(obj)) return obj;
+  if (obj.values) return obj.values;
+
+  obj = obj.__types || obj;
+  if (fieldType) {
+    obj = obj[fieldType] || obj[fieldType.toLowerCase()] || obj.default || obj;
+  }
+  return resolveValues(obj, fieldType);
+};
 
 export function createKeyMatcher({
   fieldMap,
@@ -20,19 +29,20 @@ export function createKeyMatcher({
 }) {
   let matchedValues;
   const example = exampleFuns(config);
-  const $resolveExampleValues = example.resolveValues || resolveValues;
+  const $resolveValues = example.resolveValues || resolveValues;
   const ctx = { type, fieldName, fieldType, field, fields, error, config };
   return function matchFakeByKey(key) {
     let obj = fieldMap[key];
+    let matches = obj.match || obj.matches;
     // allow more fine grained mapping on type of field
     obj = obj.__types || obj;
-    obj = obj[fieldType] || obj[fieldType.lowercase()] || obj.default || obj;
+    obj = obj[fieldType] || obj[fieldType.toLowerCase()] || obj.default || obj;
 
     if (Array.isArray(obj)) {
       matchedValues = obj;
       return key;
     }
-    const matches = obj.match || obj.matches || [key];
+    matches = matches || obj.match || obj.matches || [key];
     if (!Array.isArray(matches)) {
       error(`resolveArray: ${key} missing matches array. Invalid ${matches}`, {
         key,
@@ -43,7 +53,7 @@ export function createKeyMatcher({
     }
     matches.find(value => {
       if (matchValue(value, fieldName, ctx)) {
-        matchedValues = $resolveExampleValues(obj);
+        matchedValues = $resolveValues(obj, fieldType);
         return value;
       }
     });
@@ -111,15 +121,17 @@ export const resolveExample = ({
   const typeFieldMatch = typeExamples[field];
   const $error = config.error || error;
   const log = config.log || console.log;
+  const fieldName = field.name;
+  const fieldType = field.type;
 
-  if (typeFieldMatch) return typeFieldMatch;
+  if (typeFieldMatch) return resolveValues(typeFieldMatch, fieldType);
   const example = exampleFuns(config);
   const $createKeyMatcher = example.createKeyMatcher || createKeyMatcher;
   const ctx = {
     type,
     field,
-    fieldName: field.name,
-    fieldType: field.type,
+    fieldName,
+    fieldType,
     fields,
     config,
     error: $error,
