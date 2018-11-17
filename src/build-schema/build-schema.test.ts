@@ -1,4 +1,4 @@
-import { createSchemaApi } from "./build-schema";
+import { createSchemaApi } from ".";
 
 const idl = `
   type Person {

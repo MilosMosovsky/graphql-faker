@@ -1,4 +1,4 @@
-import { run } from ".";
+import { run } from "..";
 
 describe("run", () => {
   describe("with file", () => {

@@ -1,4 +1,4 @@
-import { proxyMiddleware } from "./proxy";
+import { proxyMiddleware } from ".";
 
 describe("proxyMiddleware", () => {
   const url = "localhost:4000/graphql";

@@ -19,7 +19,7 @@ import {
   DocumentNode
 } from "graphql";
 
-import { fakeSchema } from "./fake-schema";
+import { fakeSchema } from "../fake-schema";
 
 type RequestInfo = {
   document: DocumentNode;

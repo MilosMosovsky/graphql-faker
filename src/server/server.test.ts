@@ -1,4 +1,4 @@
-import { createServerApi } from "./server";
+import { createServerApi } from ".";
 
 const idl = `
   type Person {

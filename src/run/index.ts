@@ -1,12 +1,12 @@
-import { proxyMiddleware } from "./proxy";
-import { existsSync } from "./utils";
+import { proxyMiddleware } from "../proxy";
+import { existsSync } from "../utils";
 import * as jsonfile from "jsonfile";
-import { createServerApi } from "./server";
-import { createIdlApi } from "./idl";
+import { createServerApi } from "../server";
+import { createIdlApi } from "../idl";
 import { Source } from "graphql";
 import * as path from "path";
 import chalk from "chalk";
-import { fakeSchema } from "./fake-schema";
+import { fakeSchema } from "../fake-schema";
 
 export function run(opts: any) {
   let {
