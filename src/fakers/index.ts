@@ -6,6 +6,8 @@ export { createTypeFakers, createFakeFunctions };
 import { resolveExample, resolveFake, error } from "./resolve";
 export { maps } from "./maps/";
 
+// TODO: needs major rewrite/refactor!!!
+// Start by making it a class with a contstructor
 export function createFakers(config) {
   const fakeFunctions = createFakeFunctions(config);
   const typeFakers = createTypeFakers(config);
@@ -20,6 +22,7 @@ export function createFakers(config) {
   const $error = config.error || error;
   const faker = config.faker || $faker;
 
+  // TODO: move to directive/fake
   function getRandomInt(min: number, max: number) {
     return faker.random.number({ min, max });
   }
@@ -35,6 +38,8 @@ export function createFakers(config) {
     return array[getRandomInt(0, array.length - 1)];
   }
 
+  // TODO: move to directive/fake
+  // TODO: needs major rewrite/refactor!!!
   function fakeValue({ type, options, locale }, ctx: any = {}) {
     const { field, fields } = ctx;
     const typeName = type; // ctx.type ??

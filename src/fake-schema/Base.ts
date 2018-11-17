@@ -1,7 +1,7 @@
 import { schemaResolvers, log } from "./utils";
 import { createFakers } from "../fakers";
 import { GraphQLSchema, GraphQLLeafType, GraphQLEnumType } from "graphql";
-import { MockValue } from "./field/value/MockValue";
+import { MockValue } from "./field/directives/mock/MockValue";
 import { DefaultValue } from "./field/value/DefaultValue";
 
 export class Base {

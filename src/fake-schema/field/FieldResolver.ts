@@ -117,6 +117,6 @@ export class FieldResolver extends Base {
   }
 
   arrayResolver(functions, sample) {
-    return new ArrayResolver(functions, sample, this.config).resolver;
+    return new ArrayResolver({ functions, sample }, this.config).resolver;
   }
 }

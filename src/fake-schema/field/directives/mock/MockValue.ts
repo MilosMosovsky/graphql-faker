@@ -1,5 +1,5 @@
-import { Base } from "../../Base";
-import { getItem } from "../../utils";
+import { Base } from "../../../Base";
+import { getItem } from "../../../utils";
 
 export class MockValue extends Base {
   getItem: Function;
@@ -20,17 +20,16 @@ export class MockValue extends Base {
   }
 
   resolve() {
-    const ctx = {
-      functions: {
-        getItem: this.getItem,
-        getTypeFaker: this.getTypeFaker
-      }
-    };
-    const getLeafResolver = this.getLeafResolver;
-    return this.resolveDefaultValue(
-      { genValue: this.genValue, getLeafResolver },
-      ctx
-    );
+    // const ctx = {
+    //   functions: {
+    //     getItem: this.getItem,
+    //     getTypeFaker: this.getTypeFaker
+    //   }
+    // };
+    return this.resolveDefaultValue({
+      genValue: this.genValue,
+      getLeafResolver: this.getLeafResolver
+    });
   }
 
   getTypeFaker() {
