@@ -111,19 +111,18 @@ export function resolveFromFieldMap({
 
 const identity = obj => obj;
 
+export const hasMatches = obj =>
+  Object.values(obj).find((val: any) => val.matches);
+
 export function resolveMapByTypeName(typeMap, typeName, ctx) {
-  const hasMatches = Object.values(typeMap).find((val: any) => val.matches);
   const hit = typeMap[typeName] || {};
   let result;
-  if (hasMatches) {
-    Object.keys(typeMap).find(typeName => {
-      const obj = typeMap[typeName];
-      const matches = obj.matches || [typeName];
-      result =
-        result || matchResult(obj, matches, identity, typeName, typeName, ctx);
-      return result;
-    });
-  }
+  Object.keys(typeMap).find(typeName => {
+    const obj = typeMap[typeName];
+    const matches = resolveMatches(obj, { key: typeName });
+    result = matchResult(obj, matches, identity, typeName, typeName, ctx);
+    return result;
+  });
   return result || hit;
 }
 
@@ -182,6 +181,14 @@ export function createKeyMatcher({
     matches = matches || resolveMatches(obj, { key });
     validateMatches(matches, key, obj, error, ctx);
 
-    return matchResult(obj, matches, resolveResult, fieldName, fieldType, ctx);
+    result = matchResult(
+      obj,
+      matches,
+      resolveResult,
+      fieldName,
+      fieldType,
+      ctx
+    );
   };
+  return result;
 }

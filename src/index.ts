@@ -5,23 +5,11 @@ import chalk from "chalk";
 import * as yargs from "yargs";
 import { run } from "./run";
 
-import {
-  fakeSchema,
-  createFakers,
-  createFakeFunctions,
-  createTypeFakers,
-  maps
-} from "./fake-schema";
+import { fakeSchema, FakeSchema } from "./fake-schema";
 
 export { run };
 
-export {
-  fakeSchema,
-  createFakers,
-  createFakeFunctions,
-  createTypeFakers,
-  maps
-};
+export { fakeSchema, FakeSchema };
 
 const argv = yargs
   .command("$0 [file]", "", cmd =>
