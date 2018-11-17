@@ -157,6 +157,68 @@ run({
 }
 ```
 
+## Enable modes and functionality
+
+```js
+const config = {
+  enable: {
+    mocking: true,
+    logging: true
+  },
+  //...
+
+```
+
+## Mocking
+
+Set `mocking: true` on the config object to enable mocking of values (static, predictable values)
+Mocking will use the first value of `@examples` and a static value for each type it can resolve.
+You can add your own mock values in a `mock` map on config:
+
+```js
+const config = {
+  enable: {
+    mocking: true
+  },
+  mocks: {
+    // fallback values for fields without match
+    __types: {
+      Int: 2,
+      String: "hi"
+    },
+    Person: {
+      name: "mike",
+      age: 32
+    },
+    // any count field
+    count: 21
+  }
+};
+```
+
+Note: Currently the `mocks` maps require a "direct hit" on type/field name to be resolved. If no hit, it falls back to use the generic mocked type values.
+
+You can extend this to be more flexible using the same infrastructure used for resolving fakers and examples (see `src/fakers/resolve`). It could then look something like this:
+
+```js
+mocks: {
+  Person: {
+    name: {
+      matches: ["name", "first"];
+      value: "mike";
+    },
+    active: {
+      boolean: {
+        value: true
+      },
+      string: {
+        value: 'yes'
+      }
+    }
+  }
+}
+```
+
 ## Customization
 
 See [Customization](./Customization.md)

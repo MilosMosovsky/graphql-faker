@@ -107,10 +107,16 @@ With arguments:
 - `alpha` (count, upcase)
 - `alphaNumeric` (count)
 - `hexaDecimal` (count)
-- `number` (minNumber, maxNumber, precisionNumber)
+- `number` (min, max, precision)
+- `float` (min, max, precision)
 - `uuid`
 - `word`
 - `words` (count)
+- `alpha` (count)
+- `alphaNumeric` (count, upcase)
+- `hexaDecimal` (count)
+- `arrayElement` (items)
+- `arrayElements` (items, maxCount)
 - `locale`
 - `filename`
 - `mimeType`

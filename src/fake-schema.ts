@@ -28,6 +28,10 @@ interface GraphQLAppliedDiretives {
   getDirectiveArgs(directiveName: string): { [argName: string]: any };
 }
 
+type MockArgs = {
+  value: any;
+};
+
 type FakeArgs = {
   type: string;
   options: { [key: string]: any };
@@ -46,6 +50,7 @@ type DirectiveArgs = {
   fake?: FakeArgs;
   examples?: ExamplesArgs;
   sample?: SampleArgs;
+  mock?: MockArgs;
 };
 
 function astToJSON(ast) {
@@ -88,10 +93,24 @@ function setScalarType(type: GraphQLScalarType) {
   type.parseValue = x => x;
 }
 
+function getItem(array: any[], { index = 0 }: any = {}) {
+  return array[index];
+}
+
+function defaultLog(msg: string, { method, data }: any = {}) {
+  const id = method ? `[${method}]` : "";
+  const info = `${id}${msg}`;
+  console.log(...[info, data || ""]);
+}
+
 export function fakeSchema(schema: GraphQLSchema, config: any = {}) {
   const schemaRes = schemaResolvers(config);
   const $createFakers = schemaRes.createFakers || createFakers;
   const fake = $createFakers(config);
+
+  if (isEnabled("logging")) {
+    config.log = config.log || defaultLog;
+  }
 
   const typeFakers = schemaRes.typeFakers || fake.typeFakers;
   const getRandomItem = schemaRes.getRandomItem || fake.getRandomItem;
@@ -188,16 +207,17 @@ export function fakeSchema(schema: GraphQLSchema, config: any = {}) {
     return fieldResolver(type, field, fields);
   }
 
-  function abstractTypeResolver(type: GraphQLAbstractType) {
+  function abstractTypeResolver(type: GraphQLAbstractType, ctx: any = {}) {
+    const getItem = ctx.getItem || getRandomItem;
     const possibleTypes = schema.getPossibleTypes(type);
-    return () => ({ __typename: getRandomItem(possibleTypes, config) });
+    return () => ({ __typename: getItem(possibleTypes, config) });
   }
 
-  function resolveDefaultValue({ genRandom, getLeafResolver, ctx }) {
+  function resolveDefaultValue({ genValue, getLeafResolver, ctx }) {
     // try resolving value based purely on type and field
     const { type } = ctx;
     try {
-      const exValue = genRandom();
+      const exValue = genValue();
       const value = exValue || fakeValue(null, null, null, ctx);
       // if no value returned, fallback to using leaf resolver
       return value !== undefined ? value : getLeafResolver(type, config);
@@ -212,21 +232,28 @@ export function fakeSchema(schema: GraphQLSchema, config: any = {}) {
       ...getFakeDirectives(type),
       ...getFakeDirectives(field)
     };
-    const { fake, examples } = directiveToArgs;
+    const { fake, examples, mock } = directiveToArgs;
     const ctx = {
       type,
       field,
       fields
     };
+
     const genRandom = () => getRandomItem(examples.values, config, ctx);
+    const genValue = () => examples.values[0];
 
     if (isLeafType(type)) {
+      if (config.mocking === true) {
+        if (mock) return () => mock.value;
+        if (examples) return () => examples.values;
+        return () => resolveMockValue({ genValue, type, field });
+      }
       if (examples) return () => genRandom();
       if (fake) {
         return () => fakeValue(fake.type, fake.options, fake.locale, ctx);
       }
       return () => {
-        resolveDefaultValue({ genRandom, getLeafResolver, ctx });
+        resolveDefaultValue({ genValue: genRandom, getLeafResolver, ctx });
       };
     } else {
       // TODO: error on fake directive
@@ -283,6 +310,9 @@ export function fakeSchema(schema: GraphQLSchema, config: any = {}) {
 
     const result = {} as DirectiveArgs;
 
+    if (directives.isApplied("mock"))
+      result.mock = directives.getDirectiveArgs("mock") as MockArgs;
+
     if (directives.isApplied("fake"))
       result.fake = directives.getDirectiveArgs("fake") as FakeArgs;
 
@@ -291,17 +321,11 @@ export function fakeSchema(schema: GraphQLSchema, config: any = {}) {
 
     if (directives.isApplied("sample"))
       result.sample = directives.getDirectiveArgs("sample") as SampleArgs;
+
     return result;
   }
 
-  function getLeafResolver(type: GraphQLLeafType, config: any = {}) {
-    const types = config.types || {};
-    const opts = types[type.name];
-    if (type instanceof GraphQLEnumType) {
-      const values = type.getValues().map(x => x.value);
-      return () => getRandomItem(values);
-    }
-
+  function getTypeFaker(type, opts) {
     const typeFaker = typeFakers[type.name];
     if (typeFaker) {
       const typeFakerGenOpts = {
@@ -312,5 +336,47 @@ export function fakeSchema(schema: GraphQLSchema, config: any = {}) {
     } else {
       return () => `<${type.name}>`;
     }
+  }
+
+  function isEnabled(name) {
+    const enabled = config.enabled;
+    return enabled[name];
+  }
+
+  function resolveMockValue({ genValue, type, field }) {
+    const mockMap = isEnabled("mocking") ? config.mocks : {};
+    const ctx = {
+      functions: {
+        getItem,
+        getTypeFaker: () => {
+          return () => {
+            let map = mockMap[type.name] || {};
+            let res = map[field.name] || map;
+            res = map[field.type] || res;
+            if (res) return res;
+
+            if (!res) {
+              map = mockMap.__types;
+              return map[field.type];
+            }
+          };
+        }
+      }
+    };
+    return resolveDefaultValue({ genValue, getLeafResolver, ctx });
+  }
+
+  function getLeafResolver(type: GraphQLLeafType, config: any = {}) {
+    const types = config.types || {};
+    const functions = config.functions || {};
+    const getItem = functions.getItem || getRandomItem;
+    const typeFaker = functions.getTypeFaker || getTypeFaker;
+
+    const opts = types[type.name];
+    if (type instanceof GraphQLEnumType) {
+      const values = type.getValues().map(x => x.value);
+      return () => getItem(values);
+    }
+    return typeFaker(type, opts);
   }
 }

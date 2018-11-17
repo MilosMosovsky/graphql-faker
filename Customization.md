@@ -160,28 +160,47 @@ const myTypeMap = {
     name: "firstName"
   },
   Product: {
+    // implicit for any type
     name: "productName",
-    category: "productCategory",
-    // detailed config with options
-    price: {
-      type: "money",
-      options: {
-        minMoney: 10,
-        maxMoney: 1000,
-        decimalPlaces: 2
+    category: {
+      // explicit type mapping
+      string: {
+        faker: "productCategory",
       }
     },
-    created: {
-      __types: {
-        string: {
-          type: "recentData",
-          options: {
-            format: "dd/mm/yyyy"
-          }
-        },
-        date: {
-          type: "recentData"
+    // detailed config with options
+    price: {
+      // on matching )case insensitive RegExp ) field name
+      matches: ['amount', 'value', 'price', 'discount'],
+      // for any type (could f.ex be a scalar Money)
+      any: {
+        faker: "money",
+        options: {
+          minMoney: 10,
+          maxMoney: 1000,
+          decimalPlaces: 2
         }
+      }
+    },
+    status: {
+      any: {
+        faker: 'arrayElement',
+        options: {
+          items: ['created', 'updated', 'deleted', 'timestamp']
+        }
+      }
+    },
+    timestamp: {
+      matches: ['created', 'updated', 'deleted', 'timestamp'],
+      string: {
+        faker: "recentData",
+        options: {
+          format: "dd/mm/yyyy"
+        }
+      },
+      date: {
+        // use raw date, ie. number of milliseconds since 1970
+        faker: "recentData"
       }
     }
   }
@@ -193,32 +212,28 @@ const examples = {
   typeMap: {
     Laptop: {
       // takes precedence over color in fieldMap
-      color: ["gray", "silver", "black"]
+      color: ["gray", "silver", "black"],
       status: {
-        __types: {
-          string: {
-            values: ['factory', 'used', 'fixed', 'repair', 'broken']
-          },
-          int: [0,1,2,3,4]
-        }
+        string: {
+          values: ['factory', 'used', 'fixed', 'repair', 'broken']
+        },
+        int: [0,1,2,3,4] // enums?
       }
     }
   },
   fieldMap: {
     ...maps.examples.fieldMap,
-    ticker: {
-      match: ["ticker", "symbol", "stock"],
+    tickers: {
+      matches: ["tickers", "symbols", "stocks"],
       values: ticker
     }
     roles: {
-      match: ["roles", "permissions"],
-      __types: {
-        string: {
-          values: ["read", "create", "update"]
-        },
-        int: {
-          values: [0, 1, 2]
-        }
+      matches: ["roles", "permissions"],
+      string: {
+        values: ["read", "create", "update"]
+      },
+      int: {
+        values: [0, 1, 2]
       }
     }
   }

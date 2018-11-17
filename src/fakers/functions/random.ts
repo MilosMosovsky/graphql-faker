@@ -4,7 +4,17 @@ export function randomFunctions(fakerOpts: any = {}) {
   // Random section
   return {
     number: {
-      args: ["minNumber", "maxNumber", "precisionNumber"],
+      args: ["min", "max", "precision"],
+      func: (min, max, precision) => {
+        const opts = {
+          ...fakerOpts.number,
+          ...{ min, max, precision }
+        };
+        return faker.random.number(opts);
+      }
+    },
+    float: {
+      args: ["min", "max", "precision"],
       func: (min, max, precision) => {
         const opts = {
           ...fakerOpts.number,
@@ -35,7 +45,7 @@ export function randomFunctions(fakerOpts: any = {}) {
       }
     },
     alpha: {
-      args: ["count", "upcase"],
+      args: ["length", "upcase"],
       func: (count, upcase) => {
         const opts = {
           ...fakerOpts.alpha,
@@ -62,6 +72,26 @@ export function randomFunctions(fakerOpts: any = {}) {
           ...{ count }
         };
         return faker.random.hexaDecimal(opts);
+      }
+    },
+    arrayElement: {
+      args: ["items"],
+      func: (items = []) => {
+        const opts = {
+          ...fakerOpts.arrayElement,
+          ...{ items }
+        };
+        return faker.random.arrayElement(opts.items);
+      }
+    },
+    arrayElements: {
+      args: ["items", "maxCount"],
+      func: (items = [], maxCount) => {
+        const opts = {
+          ...fakerOpts.arrayElements,
+          ...{ items, maxCount }
+        };
+        return faker.random.arrayElements(opts.items, opts.maxCount);
       }
     },
     locale: () => faker.random.locale()
