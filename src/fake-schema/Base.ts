@@ -1,5 +1,4 @@
-import { schemaResolvers, log } from "./utils";
-import { createFakers } from "../fakers";
+import { log } from "./utils";
 import { GraphQLSchema, GraphQLLeafType, GraphQLEnumType } from "graphql";
 import { MockValue } from "./field/directives/mock/MockValue";
 import { DefaultValue } from "./field/value/DefaultValue";
@@ -19,19 +18,11 @@ export class Base {
   }
 
   constructor(config, schema?) {
+    this.config = config;
     this.setSchema(schema);
-    const schemaRes = schemaResolvers(config);
-    const $createFakers = schemaRes.createFakers || createFakers;
-    const fake = $createFakers(config);
-
     if (this.isEnabled("logging")) {
       config.log = config.log || log;
     }
-    this.config = config;
-    this.typeFakers = schemaRes.typeFakers || fake.typeFakers;
-    this.getRandomItem = schemaRes.getRandomItem || fake.getRandomItem;
-    this.getRandomInt = schemaRes.getRandomInt || fake.getRandomInt;
-    this.fakeValue = schemaRes.fakeValue || fake.fakeValue;
   }
 
   isEnabled(name) {
