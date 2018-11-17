@@ -9,7 +9,7 @@ export function validateFunction({ method, functionName, func, data, error }) {
   }
 }
 
-export function matchFieldName(matchItem, name, ctx: any = {}) {
+export function matchName(matchItem, name, ctx: any = {}) {
   const regExpPattern =
     typeof matchItem === "string" ? escapeStrRegexp(matchItem) : matchItem;
   const opts = ctx.regExpOpts || "i";
@@ -109,6 +109,41 @@ export function resolveFromFieldMap({
   return key ? result : null;
 }
 
+const identity = obj => obj;
+
+export function resolveMapByTypeName(typeMap, typeName, ctx) {
+  const hasMatches = Object.values(typeMap).find((val: any) => val.matches);
+  const hit = typeMap[typeName] || {};
+  let result;
+  if (hasMatches) {
+    Object.keys(typeMap).find(typeName => {
+      const obj = typeMap[typeName];
+      const matches = obj.matches || [typeName];
+      result =
+        result || matchResult(obj, matches, identity, typeName, typeName, ctx);
+      return result;
+    });
+  }
+  return result || hit;
+}
+
+export function resolveTypeFieldMap(typeMap, typeName, fieldName, ctx) {
+  const map = resolveMapByTypeName(typeMap, typeName, ctx);
+  return map[fieldName];
+}
+
+export function matchResult(obj, matches, resolveResult, name, type, ctx) {
+  let result;
+  // todo: make generic
+  matches.find(matchItem => {
+    if (matchName(matchItem, name, ctx)) {
+      result = resolveResult(obj, type, ctx);
+      return matchItem;
+    }
+  });
+  return result;
+}
+
 export function createKeyMatcher({
   fieldMap,
   type,
@@ -147,12 +182,6 @@ export function createKeyMatcher({
     matches = matches || resolveMatches(obj, { key });
     validateMatches(matches, key, obj, error, ctx);
 
-    matches.find(matchItem => {
-      if (matchFieldName(matchItem, fieldName, ctx)) {
-        result = resolveResult(obj, fieldType, ctx);
-        return matchItem;
-      }
-    });
-    return result;
+    return matchResult(obj, matches, resolveResult, fieldName, fieldType, ctx);
   };
 }

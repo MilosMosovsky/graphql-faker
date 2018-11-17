@@ -291,6 +291,18 @@ type Person {
 
 By using a config object, you can reuse a configuration across multiple projects/schemas with minimal "schema pollution" while still generating appropriate fake values.
 
+### Type matches
+
+There is currently experimental support (WIP) for `matches` option on the `typeName` as well
+
+````js
+  Car: {
+    matches: ['Car', 'Vehicle', 'Auto'],
+    // ...
+  }
+}
+```
+
 ### Custom schema resolver functions
 
 You can further customize by passing any of the following functions as entries in `config.resolvers.schema` object
@@ -315,7 +327,7 @@ const config = {
   }
   // ...
 };
-```
+````
 
 ### Custom directives resolver functions
 

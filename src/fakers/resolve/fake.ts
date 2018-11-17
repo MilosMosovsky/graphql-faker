@@ -1,6 +1,7 @@
 import { fakes as fakeMaps } from "../maps";
 import { error } from "./error";
 import {
+  resolveTypeFieldMap,
   resolveFromFieldMap,
   createKeyMatcher,
   mapsFor,
@@ -35,12 +36,6 @@ export const resolveFake = ({ type, field, fields = [], config = {} }: any) => {
   const typeMap = maps.typeMap || {};
   const fieldMap = maps.fieldMap || {};
 
-  const typeFakes = typeMap[typeName] || {};
-  const typeFieldMap = typeFakes[fieldName];
-
-  const $createKeyMatcher = funs.createKeyMatcher || createKeyMatcher;
-  const $resolveFromFieldMap = funs.resolveFromFieldMap || resolveFromFieldMap;
-
   const ctx = {
     type,
     field,
@@ -52,6 +47,11 @@ export const resolveFake = ({ type, field, fields = [], config = {} }: any) => {
     error: $error,
     log
   };
+
+  const typeFieldMap = resolveTypeFieldMap(typeMap, typeName, fieldName, ctx);
+
+  const $createKeyMatcher = funs.createKeyMatcher || createKeyMatcher;
+  const $resolveFromFieldMap = funs.resolveFromFieldMap || resolveFromFieldMap;
 
   const functions = {
     createKeyMatcher: $createKeyMatcher,
