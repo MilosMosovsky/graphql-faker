@@ -65,4 +65,22 @@ mocks: {
 }
 ```
 
-Feel free to make a PR to make this happen.
+You can also opt to reuse the faker maps to include a mock value to be used when mocking is enabled.
+
+```js
+const config = {
+  maps: {
+    fakers: {
+      category: {
+        // explicit type mapping
+        string: {
+          faker: "productCategory", // used when NOT mocking: true
+          mockValue: "shoes" // used when mocking: true
+        }
+      }
+    }
+  }
+};
+```
+
+Please feel free to make a PR to make this happen.
