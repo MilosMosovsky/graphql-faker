@@ -1,4 +1,4 @@
-import { Base } from "../fake-schema/Base";
+import { Base } from "../../../../Base";
 const faker = require("faker");
 
 export const createTypeFakers = config => new TypeFakers(config).resolvers;
