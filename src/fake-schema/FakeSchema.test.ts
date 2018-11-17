@@ -1,4 +1,4 @@
-import { fakeSchema } from "./";
+import { fakeSchema } from ".";
 import { createSchemaApi } from "../build-schema";
 
 const idl = `

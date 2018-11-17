@@ -75,14 +75,14 @@ export class Base {
     return new MockValue({ genValue }, { type, field }, this.config).resolve();
   }
 
-  resolveDefaultValue({ genValue, getLeafResolver }, ctx) {
+  resolveDefaultValue({ genValue, getLeafResolver }) {
     return new DefaultValue(
       {
         genValue,
         getLeafResolver
       },
-      ctx,
-      this.config
+      this.config,
+      this
     ).resolve();
   }
 }

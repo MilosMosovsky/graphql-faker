@@ -26,8 +26,8 @@ export class FieldResolver extends Base {
   }
 
   get resolver() {
-    const { field, fields } = this;
-    const fakeResolver = this.getResolver(field.type, field, fields);
+    const { field } = this;
+    const fakeResolver = this.getResolver(field.type);
     return (source, _0, _1, info) => {
       if (source && source.$example && source[field.name]) {
         return source[field.name];
@@ -38,20 +38,20 @@ export class FieldResolver extends Base {
     };
   }
 
-  getResolver(type: GraphQLOutputType, field, fields?: string[]) {
-    if (type instanceof GraphQLNonNull)
-      return this.getResolver(type.ofType, field, fields);
+  getResolver(type: GraphQLOutputType) {
+    const { field } = this;
+    if (type instanceof GraphQLNonNull) return this.getResolver(type.ofType);
     if (type instanceof GraphQLList) {
       const fakeDirectives = getFakeDirectives(field);
       const functions = {
-        getItem: this.getResolver(type.ofType, field, fields)
+        getItem: this.getResolver(type.ofType)
       };
       return this.arrayResolver(functions, fakeDirectives.sample);
     }
 
     if (isAbstractType(type)) return this.abstractTypeResolver(type);
 
-    return this.fieldResolver(type, field, fields);
+    return this.fieldResolver(type);
   }
 
   abstractTypeResolver(type: GraphQLAbstractType, ctx: any = {}) {
@@ -60,55 +60,59 @@ export class FieldResolver extends Base {
     return () => ({ __typename: getItem(possibleTypes, this.config) });
   }
 
-  fieldResolver(type: GraphQLOutputType, field, fields: string[]) {
+  fieldResolver(type: GraphQLOutputType) {
+    const { field } = this;
     const directives = {
       ...getFakeDirectives(type),
       ...getFakeDirectives(field)
     };
-    const { examples } = directives;
-    const ctx = {
-      type,
-      field,
-      fields
-    };
-
-    this.genRandom = () =>
-      this.getRandomItem(examples.values, this.config, ctx);
-    this.genValue = () => examples.values[0];
-
-    if (isLeafType(type)) {
-      this.resolveLeafType(type, directives, ctx);
-    } else {
-      // TODO: error on fake directive
-      if (examples) {
-        return () => ({
-          ...this.genRandom(),
-          $example: true
-        });
-      }
-      return () => ({});
-    }
+    isLeafType(type)
+      ? this.resolveLeafType(type, directives)
+      : this.resolveComplexType(directives);
   }
 
-  resolveLeafType(type, directives, ctx) {
+  resolveComplexType(directives) {
+    const { examples } = directives;
+
+    // TODO: error on fake directive
+    if (examples) {
+      return this.getExamplesResolver(examples);
+    }
+    return this.getDefaultComplexResolver();
+  }
+
+  getDefaultComplexResolver() {
+    return () => ({});
+  }
+
+  getExamplesResolver(examples) {
+    const genRandom = () => this.getRandomItem(examples.values, this.config);
+
+    return () => ({
+      ...genRandom(),
+      $example: true
+    });
+  }
+
+  resolveLeafType(type, directives) {
     const { fake, examples, mock } = directives;
     const { field } = this;
     if (this.isEnabled("mocking")) {
+      const genValue = () => examples.values[0];
       if (mock) return () => mock.value;
       if (examples) return () => examples.values;
-      return () =>
-        this.resolveMockValue({ genValue: this.genValue }, { type, field });
+      return () => this.resolveMockValue({ genValue }, { type, field });
     }
     if (examples) return () => this.genRandom();
     if (fake) {
-      return () => this.fakeValue(fake.type, fake.options, fake.locale, ctx);
+      return () => this.fakeValue(fake, this);
     }
     const functions = {
       genValue: this.genRandom,
       getLeafResolver: this.getLeafResolver
     };
     return () => {
-      this.resolveDefaultValue(functions, ctx);
+      this.resolveDefaultValue(functions);
     };
   }
 

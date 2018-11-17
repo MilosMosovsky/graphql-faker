@@ -35,10 +35,16 @@ export function createFakers(config) {
     return array[getRandomInt(0, array.length - 1)];
   }
 
-  function fakeValue(fakeType, options?, locale?, typeInfo: any = {}) {
-    const { type, field, fields } = typeInfo;
-    const resolvedFake = $resolveFake({ type, field, fields, config });
-    fakeType = fakeType || resolvedFake.type;
+  function fakeValue({ type, options, locale }, ctx: any = {}) {
+    const { field, fields } = ctx;
+    const typeName = type; // ctx.type ??
+    const resolvedFake = $resolveFake({
+      type: typeName,
+      field,
+      fields,
+      config
+    });
+    const fakeType = typeName || resolvedFake.type;
     options = options || resolvedFake.options || {};
 
     const fakeGenerator = fakeFunctions[fakeType];
