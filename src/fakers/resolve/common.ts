@@ -135,7 +135,7 @@ export function createKeyMatcher({
     config
   };
 
-  return function matchFakeByKey(key) {
+  return key => {
     let matches;
     let obj = fieldMap[key];
     obj = resolveObj(obj, { fieldType });

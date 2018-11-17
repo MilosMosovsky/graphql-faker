@@ -1,4 +1,4 @@
-import { resolveFake, resolveFakeOptions, resolveFakeType } from "./fake";
+import { resolveFake, resolveResult } from "./fake";
 
 // re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
 // Allow `matches` list for both, using `resolveMatches`
@@ -38,33 +38,16 @@ describe("resolveFake", () => {
   });
 });
 
-describe("resolveFakeType", () => {
+describe("resolveResult", () => {
   const type = "lorem";
   const value = {
     type
   };
-  const fakeType = resolveFakeType({ value });
+  const fakeType = resolveResult({ value });
 
   describe("fakeType", () => {
-    test("is defined", () => {
+    test("is type", () => {
       expect(fakeType).toEqual(type);
-    });
-  });
-});
-
-describe("resolveFakeOptions", () => {
-  const options = {
-    count: 1
-  };
-
-  const value = {
-    options
-  };
-  const fakeOpts = resolveFakeOptions({ value });
-
-  describe("fakeOpts", () => {
-    test("is defined", () => {
-      expect(fakeOpts).toEqual(options);
     });
   });
 });

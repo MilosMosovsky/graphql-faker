@@ -20,10 +20,6 @@ export const resolveResult = ({ value, key }: any = {}) => {
   return $default;
 };
 
-export const resolveFakeOptions = ({ value }: any = {}) => {
-  return typeof value === "string" ? {} : value.options;
-};
-
 // re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
 // Allow `matches` list for both, using `resolveMatches`
 export const resolveFake = ({ type, field, fields = [], config = {} }: any) => {
