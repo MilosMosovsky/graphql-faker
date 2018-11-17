@@ -1,4 +1,12 @@
 import { Kind, GraphQLObjectType, GraphQLScalarType } from "graphql";
+import {
+  GraphQLAppliedDiretives,
+  DirectiveArgs,
+  MockArgs,
+  FakeArgs,
+  ExamplesArgs,
+  SampleArgs
+} from "./types";
 
 export function astToJSON(ast) {
   switch (ast.kind) {
@@ -48,4 +56,25 @@ export function log(msg: string, { method, data }: any = {}) {
   const id = method ? `[${method}]` : "";
   const info = `${id}${msg}`;
   console.log(...[info, data || ""]);
+}
+
+export function getFakeDirectives(object: any): DirectiveArgs {
+  const directives = object["appliedDirectives"] as GraphQLAppliedDiretives;
+  if (!directives) return {};
+
+  const result = {} as DirectiveArgs;
+
+  if (directives.isApplied("mock"))
+    result.mock = directives.getDirectiveArgs("mock") as MockArgs;
+
+  if (directives.isApplied("fake"))
+    result.fake = directives.getDirectiveArgs("fake") as FakeArgs;
+
+  if (directives.isApplied("examples"))
+    result.examples = directives.getDirectiveArgs("examples") as ExamplesArgs;
+
+  if (directives.isApplied("sample"))
+    result.sample = directives.getDirectiveArgs("sample") as SampleArgs;
+
+  return result;
 }

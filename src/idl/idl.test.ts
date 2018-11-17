@@ -1,4 +1,4 @@
-import { createIdlApi } from "./idl";
+import { createIdlApi } from ".";
 import * as path from "path";
 
 describe("createIdlApi", () => {
