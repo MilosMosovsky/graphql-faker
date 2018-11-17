@@ -10,7 +10,8 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLEnumType,
-  GraphQLLeafType
+  GraphQLLeafType,
+  GraphQLNamedType
 } from "graphql";
 
 import {
@@ -37,6 +38,10 @@ import {
   useFakeProperties
 } from "./utils";
 
+type TypeMap = {
+  [typeName: string]: GraphQLNamedType;
+};
+
 export class FakeSchema {
   getRandomItem: Function;
   getRandomInt: Function;
@@ -45,6 +50,9 @@ export class FakeSchema {
   schema: GraphQLSchema;
   config: any;
   typeFakers: any;
+  typeMap: TypeMap;
+  typeMapValues: any[];
+  stdTypeNames: string[];
 
   constructor(schema: GraphQLSchema, config: any = {}) {
     this.schema = schema;
@@ -61,16 +69,18 @@ export class FakeSchema {
     this.getRandomItem = schemaRes.getRandomItem || fake.getRandomItem;
     this.getRandomInt = schemaRes.getRandomInt || fake.getRandomInt;
     this.fakeValue = schemaRes.fakeValue || fake.fakeValue;
-
-    const stdTypeNames = Object.keys(this.typeFakers);
-
+    this.stdTypeNames = Object.keys(this.typeFakers);
     this.mutationType = schema.getMutationType();
     const jsonType = schema.getTypeMap()["examples__JSON"];
     jsonType["parseLiteral"] = astToJSON;
-    const typeMap = schema.getTypeMap();
-    const values = Object.values(typeMap);
-    for (const type of values) {
-      if (isScalarField(type, stdTypeNames)) {
+    this.typeMap = schema.getTypeMap();
+    this.typeMapValues = Object.values(this.typeMap);
+    this.resolveTypeMapValues();
+  }
+
+  resolveTypeMapValues() {
+    for (const type of this.typeMapValues) {
+      if (isScalarField(type, this.stdTypeNames)) {
         setScalarType(type as GraphQLScalarType);
       }
       if (useFakeProperties(type)) {
@@ -82,15 +92,15 @@ export class FakeSchema {
     }
   }
 
-  isMutation(objectType) {
+  protected isMutation(objectType) {
     return objectType === this.mutationType;
   }
 
-  useRelayMutation(field, objectType) {
+  protected useRelayMutation(field, objectType) {
     return this.isMutation(objectType) && this.isRelayMutation(field);
   }
 
-  addFakeProperties(objectType: GraphQLObjectType) {
+  protected addFakeProperties(objectType: GraphQLObjectType) {
     const fields = objectType.getFields();
     const values = Object.values(fields);
     for (const field of values) {
@@ -100,7 +110,7 @@ export class FakeSchema {
     }
   }
 
-  isRelayMutation(field) {
+  protected isRelayMutation(field) {
     const args = field.args;
     if (args.length !== 1 || args[0].name !== "input") return false;
 

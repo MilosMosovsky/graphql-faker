@@ -4,8 +4,8 @@ import { FakeSchema } from "./FakeSchema";
 export function fakeSchema(
   schema: GraphQLSchema,
   config: any = {}
-): GraphQLSchema {
-  return new FakeSchema(schema, config).schema;
+): FakeSchema {
+  return new FakeSchema(schema, config);
 }
 
 export { FakeSchema } from "./FakeSchema";
