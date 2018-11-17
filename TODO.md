@@ -1,3 +1,4 @@
 # TODO
 
-re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`. Allow `matches` list for both, using `resolveMatches`
+- Use classes to make it easier to extend internal mechanics
+- pass around a context (`ctx`) object instead of a series of arguments
