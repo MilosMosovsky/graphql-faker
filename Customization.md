@@ -1,5 +1,21 @@
 # Customization
 
+## Subclass and override
+
+You can now extend the `FakeSchema` class and override key functions to provide your own custom functionality:
+
+```js
+import { FakeSchema } from "graphql-faker";
+
+class MyFakeSchema extends FakeSchema {
+  // overrides
+}
+
+const fakedSchema = new FakeSchema(schema, config);
+```
+
+## Configuration
+
 Pass a `config` object as the second argument to `fakeSchema` to customize how the fake schema is generated. See below for details on all the configuration options available.
 
 ```js
