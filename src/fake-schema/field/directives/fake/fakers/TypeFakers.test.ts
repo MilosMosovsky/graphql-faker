@@ -1,4 +1,4 @@
-import { createTypeFakers } from "./type-fakers";
+import { createTypeFakers } from "./TypeFakers";
 
 describe("createTypeFakers", () => {
   const config = {};

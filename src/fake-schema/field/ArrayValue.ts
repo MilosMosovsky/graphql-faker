@@ -1,6 +1,6 @@
 import { SampleArgs } from "../types";
 import { Base } from "../Base";
-import { SampleValue } from "./directives/sample/SampleValue";
+import { SampleValue } from "./directives/sample";
 
 type ArrayResolverOpts = {
   functions: any;

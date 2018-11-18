@@ -1,7 +1,7 @@
 import { log } from "./utils";
 import { GraphQLSchema, GraphQLLeafType, GraphQLEnumType } from "graphql";
-import { MockValue } from "./field/directives/mock/MockValue";
-import { DefaultValue } from "./field/value/DefaultValue";
+import { MockValue } from "./field/directives/mock";
+import { DefaultValue } from "./field/value";
 
 export class Base {
   getRandomItem: Function;
@@ -35,7 +35,8 @@ export class Base {
     return source && source[path!.key];
   }
 
-  getLeafResolver(type: GraphQLLeafType, config: any = {}) {
+  getLeafResolver(type: GraphQLLeafType) {
+    const config = this.config;
     const types = config.types || {};
     const functions = config.functions || {};
     const getItem = functions.getItem || this.getRandomItem;

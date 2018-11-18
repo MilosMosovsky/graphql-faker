@@ -17,12 +17,10 @@ export class DefaultValue extends Base {
       const exValue = this.genValue();
       const value = exValue || this.fakeValue(null, null, null, this.ctx);
       // if no value returned, fallback to using leaf resolver
-      return value !== undefined
-        ? value
-        : this.getLeafResolver(type, this.config);
+      return value !== undefined ? value : this.getLeafResolver(type);
     } catch (err) {
       // if error on resolve, fallback to using leaf resolver (ie. generic value by field type)
-      return this.getLeafResolver(type, this.config);
+      return this.getLeafResolver(type);
     }
   }
 }

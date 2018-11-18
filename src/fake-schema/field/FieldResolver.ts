@@ -9,7 +9,8 @@ import {
 
 import { getFakeDirectives } from "../utils";
 import { Base } from "../Base";
-import { ArrayResolver } from "./ArrayResolver";
+import { ArrayValue } from "./value/ArrayValue";
+import { PrimitiveValue } from "./value/PrimitiveValue";
 
 export class FieldResolver extends Base {
   field: any;
@@ -95,28 +96,10 @@ export class FieldResolver extends Base {
   }
 
   resolveLeafType(type, directives) {
-    const { fake, examples, mock } = directives;
-    const { field } = this;
-    if (this.isEnabled("mocking")) {
-      const genValue = () => examples.values[0];
-      if (mock) return () => mock.value;
-      if (examples) return () => examples.values;
-      return () => this.resolveMockValue({ genValue }, { type, field });
-    }
-    if (examples) return () => this.genRandom();
-    if (fake) {
-      return () => this.fakeValue(fake, this);
-    }
-    const functions = {
-      genValue: this.genRandom,
-      getLeafResolver: this.getLeafResolver
-    };
-    return () => {
-      this.resolveDefaultValue(functions);
-    };
+    new PrimitiveValue({ type, field: this.field, directives }, this.config);
   }
 
   arrayResolver(functions, sample) {
-    return new ArrayResolver({ functions, sample }, this.config).resolver;
+    return new ArrayValue({ functions, sample }, this.config).resolver;
   }
 }

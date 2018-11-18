@@ -6,7 +6,7 @@ import {
   createKeyMatcher,
   mapsFor,
   funsFor
-} from "./common";
+} from "../../../common";
 
 export const isValidResult = value => {
   return typeof value === "string" || value.faker;

@@ -1,2 +1,2 @@
 export { FieldResolver } from "./FieldResolver";
-export { ArrayResolver } from "./ArrayResolver";
+export { ArrayValue } from "./value/ArrayValue";
