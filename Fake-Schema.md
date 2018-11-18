@@ -106,3 +106,38 @@ The `FakeValue` class resolves an mock field value. It uses the `@fake` directiv
 ## Fakers
 
 The fakers are used by `FakeValue` to resolve a field to a fake value, using [FakerJS](https://github.com/marak/Faker.js/). You can override FakeValue or any of the faker infrastructure to generate your own fake values according to your particular needs.
+
+### TypeFakers
+
+Creates fakers for types, including primtives (`ID`, `String`, `Int`, `Float`, ...) and custom scalars (such as `Date`, `Money` etc.)
+
+### Fakers
+
+#### fakeValue
+
+Creates a fake value using a faker selected for the specific field, based on the `@fake` directive or by using field meta data (name/type) lookup in map.
+
+### Random
+
+Includes functions to generate random int value or selecting a random item from a list
+
+- `getRandomInt`
+- `getRandomItem`
+
+### FakeResolver
+
+Resolves a field to a fake value using a fake definition found by lookup strategy in a map.
+
+### FakeResolver
+
+Resolves a field to a fake value using a fake definition found by lookup strategy in a map.
+
+### maps
+
+Includes maps for `fakes` and `examples`.
+
+TODO: move examples map to example directive!
+
+### functions
+
+Faker function wrappers for each [FakerJS API section](https://github.com/marak/Faker.js/#api-methods)

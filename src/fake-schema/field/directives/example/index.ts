@@ -1,4 +1,4 @@
-import { ExampleValue } from "./ExampleValue";
+import { ExampleResolver } from "./ExampleResolver";
 
 // re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
 // Allow `matches` list for both, using `resolveMatches`
@@ -8,7 +8,7 @@ export const resolveExample = ({
   fields = [],
   config = {}
 }: any): any[] => {
-  return new ExampleValue({
+  return new ExampleResolver({
     field,
     type,
     fields,

@@ -7,6 +7,8 @@ import { resolveFake, error } from "./resolve";
 // import { Base } from "../../../../Base";
 export { maps } from "./maps";
 
+export const createFakers = config => new Fakers(config);
+
 // TODO: needs major rewrite/refactor!!!
 // Start by making it a class with a contstructor
 export class Fakers {

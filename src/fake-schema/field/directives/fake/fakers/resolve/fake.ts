@@ -1,5 +1,4 @@
 import { fakes as fakeMaps } from "../maps";
-import { error } from "./error";
 import {
   resolveTypeFieldMap,
   resolveFromFieldMap,
@@ -24,56 +23,76 @@ export const resolveResult = ({ value, key }: any = {}) => {
 // re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
 // Allow `matches` list for both, using `resolveMatches`
 export const resolveFake = ({ type, field, fields = [], config = {} }: any) => {
-  const $error = config.error || error;
-  const log = config.log || console.log;
-  const typeName = typeof type === "string" ? type : type.name;
-  const fieldName = field.name;
-  const fieldType = field.type;
+  return new FakeResolver({ type, field, fields, config }).resolve();
+};
 
-  const funs = funsFor("fakes", config);
-  const maps = mapsFor("fakes", fakeMaps, config);
+// TODO: Almost same as for Example, extract into BaseResolver class
+export class FakeResolver {
+  fieldMap: any;
+  ctx: any;
+  typeFieldMap: any;
+  resolveFromFieldMap: Function;
+  functions: any;
 
-  const typeMap = maps.typeMap || {};
-  const fieldMap = maps.fieldMap || {};
+  constructor({ type, field, fields = [], config = {} }: any) {
+    const $error = config.error;
+    const log = config.log || console.log;
+    const typeName = typeof type === "string" ? type : type.name;
+    const fieldName = field.name;
+    const fieldType = field.type;
 
-  const ctx = {
-    type,
-    field,
-    typeName,
-    fieldName,
-    fieldType,
-    fields,
-    config,
-    error: $error,
-    log
-  };
+    const funs = funsFor("fakes", config);
+    const maps = mapsFor("fakes", fakeMaps, config);
 
-  const typeFieldMap = resolveTypeFieldMap(typeMap, typeName, fieldName, ctx);
+    const typeMap = maps.typeMap || {};
+    this.fieldMap = maps.fieldMap || {};
 
-  const $createKeyMatcher = funs.createKeyMatcher || createKeyMatcher;
-  const $resolveFromFieldMap = funs.resolveFromFieldMap || resolveFromFieldMap;
+    this.ctx = {
+      type,
+      field,
+      typeName,
+      fieldName,
+      fieldType,
+      fields,
+      config,
+      error: $error,
+      log
+    };
 
-  const functions = {
-    createKeyMatcher: $createKeyMatcher,
-    resolveResult,
-    isValidResult
-  };
-
-  let result;
-  if (typeFieldMap) {
-    result = $resolveFromFieldMap({
-      fieldMap: typeFieldMap,
-      functions,
-      ...ctx
-    });
+    this.typeFieldMap = resolveTypeFieldMap(
+      typeMap,
+      typeName,
+      fieldName,
+      this.ctx
+    );
+    const $createKeyMatcher = funs.createKeyMatcher || createKeyMatcher;
+    this.resolveFromFieldMap = funs.resolveFromFieldMap || resolveFromFieldMap;
+    this.functions = {
+      createKeyMatcher: $createKeyMatcher,
+      resolveResult,
+      isValidResult
+    };
   }
 
-  return (
-    result ||
-    $resolveFromFieldMap({
-      fieldMap,
-      functions,
-      ...ctx
-    })
-  );
-};
+  resolve() {
+    let result;
+    const rest = {
+      functions: this.functions,
+      ...this.ctx
+    };
+    if (this.typeFieldMap) {
+      result = this.resolveFromFieldMap({
+        fieldMap: this.typeFieldMap,
+        ...rest
+      });
+    }
+
+    return (
+      result ||
+      this.resolveFromFieldMap({
+        fieldMap: this.fieldMap,
+        ...rest
+      })
+    );
+  }
+}

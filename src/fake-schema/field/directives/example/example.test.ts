@@ -18,7 +18,22 @@ describe("resolveExample", () => {
   });
 });
 
-import { resolveValues } from "./ExampleValue";
+import { resolveValues, ExampleResolver } from "./ExampleResolver";
+
+describe("ExampleResolver", () => {
+  const field = {
+    name: "firstName",
+    type: "String"
+  };
+  const type = "Person";
+  const resolver = new ExampleResolver({ field, type });
+
+  describe("resolver", () => {
+    test("is defined", () => {
+      expect(resolver).toBeDefined();
+    });
+  });
+});
 
 describe("resolveValues", () => {
   const obj = {

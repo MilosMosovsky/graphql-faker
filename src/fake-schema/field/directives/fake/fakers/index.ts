@@ -1,4 +1,4 @@
-export { Fakers } from "./Fakers";
+export { Fakers, createTypeFakers } from "./Fakers";
 export { Random } from "./Random";
 export { TypeFakers } from "./TypeFakers";
 import * as resolve from "./resolve";

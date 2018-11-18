@@ -1,5 +1,4 @@
 import { examples as exampleMaps } from "../fake/fakers/maps";
-import { error } from "../fake/fakers/resolve/error";
 import {
   createKeyMatcher,
   resolveFromFieldMap,
@@ -14,7 +13,7 @@ export const resolveValues = obj => {
   if (obj.values) return obj.values;
 };
 
-export class ExampleValue {
+export class ExampleResolver {
   typeFieldMap: any;
   fieldMap: any;
   resolveFromFieldMap: any;
@@ -22,7 +21,7 @@ export class ExampleValue {
   functions: any;
 
   constructor({ field, type, fields = [], config = {} }: any) {
-    const $error = config.error || error;
+    const $error = config.error;
     const log = config.log || console.log;
     const typeName = typeof type === "string" ? type : type.name;
     const fieldName = field.name;
