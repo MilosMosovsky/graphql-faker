@@ -5,42 +5,56 @@ import { pick } from "lodash";
 import { Source } from "graphql";
 import * as express from "express";
 import * as graphqlHTTP from "express-graphql";
-import { createSchemaApi } from "../build-schema";
+import { createServerSchema } from "../server-schema";
 import * as path from "path";
 import chalk from "chalk";
+import { Base } from "../Base";
 
 // TODO: turn into class
-export function createServerApi({ corsOptions, opts = {}, IDL }: any) {
-  const log = console.log;
-  const { saveIDL, readIDL } = IDL;
-  const { buildServerSchema } = createSchemaApi({ readIDL, opts });
-  const { forwardHeaders, open, port } = opts;
+export function createServer(opts: any = {}) {
+  return new Server(opts);
+}
 
-  const forwardHeaderNames = (forwardHeaders || []).map(str =>
-    str.toLowerCase()
-  );
+export class Server extends Base {
+  corsOptions: any;
+  IDL: any;
+  opts: any;
+  schema: any;
+  forwardHeaderNames: string[];
 
-  function runServer(
-    schemaIDL: Source,
-    extensionIDL: Source,
-    config = {},
-    optionsCB
-  ) {
+  constructor({ corsOptions, opts = {}, IDL, config = {} }: any) {
+    super(config);
+    this.corsOptions = corsOptions;
+    this.IDL = IDL;
+    this.opts = opts;
+    const { readIDL } = IDL;
+    this.schema = createServerSchema({ readIDL, opts });
+    this.forwardHeaderNames = (opts.forwardHeaders || []).map(str =>
+      str.toLowerCase()
+    );
+  }
+
+  runServer(schemaIDL: Source, extensionIDL: Source, config = {}, optionsCB) {
+    const { saveIDL } = this.IDL;
+    const { build } = this.schema;
+    const { corsOptions, opts, forwardHeaderNames, log } = this;
+    const { open, port } = opts;
     const app = express();
+    const corsConf = cors(corsOptions);
 
     if (extensionIDL) {
-      const schema = buildServerSchema(schemaIDL);
+      const schema = build(schemaIDL);
       extensionIDL.body = extensionIDL.body.replace(
         "<RootTypeName>",
         schema.getQueryType().name
       );
     }
-    app.options("/graphql", cors(corsOptions));
+    app.options("/graphql", corsConf);
     app.use(
       "/graphql",
-      cors(corsOptions),
+      corsConf,
       graphqlHTTP(req => {
-        const schema = buildServerSchema(schemaIDL);
+        const schema = build(schemaIDL);
         const forwardHeaders = pick(req.headers, forwardHeaderNames);
         return {
           ...optionsCB(schema, extensionIDL, forwardHeaders, config),
@@ -93,8 +107,4 @@ export function createServerApi({ corsOptions, opts = {}, IDL }: any) {
       setTimeout(() => opn(`http://localhost:${port}/editor`), 500);
     }
   }
-
-  return {
-    runServer
-  };
 }

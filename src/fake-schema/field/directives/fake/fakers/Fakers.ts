@@ -1,10 +1,9 @@
 //import * as faker from 'faker';
 const faker = require("faker");
 import { createFakeFunctions } from "./functions";
-import { createTypeFakers } from "./TypeFakers";
-export { createTypeFakers, createFakeFunctions };
+export { createFakeFunctions };
 import { resolveFakes } from "../../../resolve";
-import { Base } from "../../../../Base";
+import { Base } from "../../../../../Base";
 
 export const createFakers = config => new Fakers(config);
 
@@ -14,15 +13,12 @@ export class Fakers extends Base {
   faker: any;
   config: any;
   fakeFunctions: any;
-  typeFakers: any;
   resolveFakes: Function;
   error: Function;
 
   constructor(config) {
     super(config);
     this.fakeFunctions = createFakeFunctions(config);
-    this.typeFakers = createTypeFakers(config);
-
     const resolvers = config.resolvers || {};
     const directives = resolvers.directives || {};
     const { fake } = directives;

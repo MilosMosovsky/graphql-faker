@@ -9,8 +9,8 @@ const idl = `
 describe("createSchemaApi", () => {
   describe("with idl", () => {
     const readIDL = async () => idl;
-    const { buildServerSchema } = createSchemaApi({ readIDL });
-    const schema = buildServerSchema({ idl });
+    const { build } = createSchemaApi({ readIDL });
+    const schema = build({ idl });
 
     test("schema", () => {
       expect(schema).toBeDefined();

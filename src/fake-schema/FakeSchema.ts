@@ -30,7 +30,7 @@ export class FakeSchema extends FakeBase {
 
   constructor(schema: GraphQLSchema, config: any = {}) {
     super(schema, config);
-    this.stdTypeNames = Object.keys(this.typeFakers);
+    this.stdTypeNames = Object.keys(this.getTypeFakers);
     this.mutationType = schema.getMutationType();
     const jsonType = schema.getTypeMap()["examples__JSON"];
     jsonType["parseLiteral"] = astToJSON;

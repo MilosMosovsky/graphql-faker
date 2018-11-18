@@ -1,4 +1,4 @@
-import { run } from "..";
+import { run, Runner } from ".";
 
 describe("run", () => {
   describe("with file", () => {
@@ -25,6 +25,20 @@ describe("run", () => {
       extendUrl: "http://example.com/graphql",
       forwardHeaders: "Authorition",
       idl
+    });
+
+    test("started", () => {
+      expect(started).toBeDefined();
+    });
+  });
+});
+
+describe("Runner", () => {
+  describe("with file", () => {
+    const started = new Runner({
+      extendUrl: "http://example.com/graphql",
+      forwardHeaders: "Authorition",
+      file: "./temp.faker.graphql"
     });
 
     test("started", () => {

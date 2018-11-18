@@ -1,4 +1,4 @@
-import { createServerApi } from ".";
+import { createServer } from ".";
 
 const idl = `
   type Person {
@@ -12,7 +12,7 @@ describe("createServerApi", () => {
   const IDL = { readIDL, saveIDL };
   const corsOptions = {};
   const opts = {};
-  const api = createServerApi({ corsOptions, opts, IDL });
+  const api = createServer({ corsOptions, opts, IDL });
 
   describe("api", () => {
     test("is defined", () => {

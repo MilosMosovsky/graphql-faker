@@ -38,7 +38,7 @@ describe("resolveFake", () => {
   });
 });
 
-import { resolveResult } from "./FakesResolver";
+import { resolveResult } from "./FakesMapResolver";
 describe("resolveResult", () => {
   const type = "lorem";
   const value = {

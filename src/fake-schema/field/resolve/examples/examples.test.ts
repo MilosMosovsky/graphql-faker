@@ -18,7 +18,7 @@ describe("resolveExample", () => {
   });
 });
 
-import { resolveResult, ExamplesResolver } from "./ExamplesMapResolver";
+import { resolveResult, ExamplesMapResolver } from "./ExamplesMapResolver";
 
 describe("ExampleResolver", () => {
   const field = {
@@ -26,7 +26,7 @@ describe("ExampleResolver", () => {
     type: "String"
   };
   const type = "Person";
-  const resolver = new ExamplesResolver({ field, type });
+  const resolver = new ExamplesMapResolver({ field, type });
 
   describe("resolver", () => {
     test("is defined", () => {

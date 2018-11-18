@@ -3,41 +3,44 @@ import { MockValue } from "./field/directives/mock";
 import { DefaultValue } from "./field/value";
 import { Random } from "./field/util";
 import { TypeFakers } from "./field/directives/fake/fakers";
-import { Base } from "./Base";
+import { Base } from "../Base";
 import { IRandom } from "./field/util/Random";
 
 export class FakeBase extends Base {
-  protected typeFakers: any;
-  protected random: any;
-
+  typeFakers: any;
+  random: any;
   typeMapValues: any[];
   schema: GraphQLSchema;
-
-  setSchema(schema) {
-    this.schema = schema;
-    return this;
-  }
 
   constructor(config, schema?) {
     super(config);
     this.setSchema(schema);
   }
 
+  setSchema(schema) {
+    this.schema = schema;
+    return this;
+  }
+
+  // should be used by subclass over typeFakers
   getTypeFakers() {
     this.typeFakers = this.typeFakers || new TypeFakers(this.config);
     return this.typeFakers;
   }
 
+  // used by: FieldResolver and this class
   getRandom({ field, type }): IRandom {
     this.random = this.random || new Random({ field, type }, this.config);
     return this.random;
   }
 
+  // used by DefaultValue and PrimitiveValue
   fakeValue() {
     return this.typeFakers.resolveValue();
   }
 
   // get value or Error instance injected by the proxy
+  // used by: FakeSchema and FakeResolver
   getCurrentSourceProperty(source, path) {
     return source && source[path!.key];
   }

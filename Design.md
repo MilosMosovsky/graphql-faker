@@ -4,15 +4,15 @@ This project has been designed specifically as a set of building blocks that are
 
 ## Main Classes
 
-- [FakeSchema](#FakeSchema)
+- [FakeSchema](#FakeSchema) `fakeSchema`
+- [Server](#Server) `createServer`
 
 ### TODO
 
-- [Server](#Server) currently `createServerApi`
-- [Runner](#Runner) currently `run`
-- [Proxy](#Runner) currently `proxyMiddleware`
-- [IDL](#IDL) currently `createIdlApi`
-- [Schema](#Schema) currently `createSchemaApi`
+- [Runner](#Runner) `createRunner`
+- [Proxy](#Runner) currently `proxyMiddleware` function
+- [IDL](#IDL) `createIdl`
+- [ServerSchema](#ServerSchema) currently `createServerSchema`
 
 ## Fake schema design
 
@@ -22,6 +22,38 @@ This project has been designed specifically as a set of building blocks that are
 
 We might introduce a `FakeBase` to include extra utilities needed for classes used in `fakeSchema`
 
-### FakeSchema
+### FakeBase
 
-See [Fake Schema](./Fake-Schema.md)
+Extends `Base` class and provides some key methods for use in classes that resolve schema fields to values.
+
+- `setSchema`
+- `getLeafResolver`
+- `getTypeFakers`
+- `getRandom`
+- `fakeValue`
+- `getCurrentSourceProperty` (move to subclass?)
+
+### Server
+
+Use `createServer` to create a `Server` class instance. Extend the `Server` class to customize it to your needs.
+
+Currently it has the following main function.
+
+`runServer(schemaIDL: Source, extensionIDL: Source, config = {}, optionsCB)`
+
+- TODO: add a configure method to configure the express app
+- TODO: rename to `run` and only execute listen on configured app
+- TODO: return promise instead or async/await instead of using callback function
+
+### Runner
+
+Call the `run` method on the `Runner` instance to run the server.
+
+### IDL
+
+- `readIDL(filepath)`
+- `saveIDL(idl)`
+
+## ServerSchema
+
+- `build`

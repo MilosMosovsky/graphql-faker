@@ -1,16 +1,11 @@
-import { createTypeFakers } from "./fakers";
-import { Base } from "../../../Base";
+import { FakeBase } from "../../../FakeBase";
 
-export class FakeValue extends Base {
+export class FakeValue extends FakeBase {
   constructor(config) {
     super(config);
   }
 
-  get typeFakers() {
-    return createTypeFakers(this.config);
-  }
-
   get resolvers() {
-    return this.typeFakers.resolvers;
+    return this.getTypeFakers;
   }
 }
