@@ -8,21 +8,23 @@ import {
 } from "graphql";
 
 import { getFakeDirectives } from "../utils";
-import { Base } from "../Base";
+import { FakeBase } from "../FakeBase";
 import { ArrayValue } from "./value/ArrayValue";
 import { PrimitiveValue } from "./value/PrimitiveValue";
 
-export class FieldResolver extends Base {
+export class FieldResolver extends FakeBase {
+  type: any;
   field: any;
   objectType: any;
   fields: string[];
-  genRandom: Function;
-  genValue: Function;
+  ctx: any;
 
-  constructor(schema, field, objectType, fields, config) {
+  constructor(schema, ctx, config) {
     super(config, schema);
+    this.ctx = ctx;
+    const { objectType, type, field } = ctx;
     this.objectType = objectType;
-    this.fields = fields;
+    this.type = type;
     this.field = field;
   }
 
@@ -56,7 +58,7 @@ export class FieldResolver extends Base {
   }
 
   abstractTypeResolver(type: GraphQLAbstractType, ctx: any = {}) {
-    const getItem = ctx.getItem || this.getRandomItem;
+    const getItem = ctx.getItem || this.getRandom(ctx).item;
     const possibleTypes = this.schema.getPossibleTypes(type);
     return () => ({ __typename: getItem(possibleTypes, this.config) });
   }
@@ -87,7 +89,7 @@ export class FieldResolver extends Base {
   }
 
   getExamplesResolver(examples) {
-    const genRandom = () => this.getRandomItem(examples.values, this.config);
+    const genRandom = () => this.getRandom(this.ctx).item(examples.values);
 
     return () => ({
       ...genRandom(),

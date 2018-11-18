@@ -2,6 +2,11 @@ const faker = require("faker");
 
 import { resolveExamples } from "../resolve";
 
+export interface IRandom {
+  item: (array: any[]) => any;
+  int: (min: number, max: number) => number;
+}
+
 export class Random {
   faker: any;
   config: any;
@@ -16,15 +21,15 @@ export class Random {
   }
 
   // TODO: move to directive/fake
-  getRandomInt(min: number, max: number) {
+  int(min: number, max: number) {
     return this.faker.random.number({ min, max });
   }
 
-  getRandomItem(array: any[]) {
+  item(array: any[]) {
     if (!Array.isArray(array)) {
       array = this.createArray();
     }
-    return array[this.getRandomInt(0, array.length - 1)];
+    return array[this.int(0, array.length - 1)];
   }
 
   createArray() {

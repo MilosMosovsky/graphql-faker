@@ -1,7 +1,7 @@
-import { Base } from "../../../Base";
+import { FakeBase } from "../../../FakeBase";
 import { getItem } from "../../../utils";
 
-export class MockValue extends Base {
+export class MockValue extends FakeBase {
   getItem: Function;
   genValue: Function;
   ctx: any;

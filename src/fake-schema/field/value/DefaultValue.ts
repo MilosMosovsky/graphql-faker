@@ -1,6 +1,6 @@
-import { Base } from "../../Base";
+import { FakeBase } from "../../FakeBase";
 
-export class DefaultValue extends Base {
+export class DefaultValue extends FakeBase {
   ctx: any;
   genValue: Function;
 
@@ -12,15 +12,14 @@ export class DefaultValue extends Base {
 
   resolve() {
     // try resolving value based purely on type and field
-    const { type } = this.ctx;
     try {
       const exValue = this.genValue();
-      const value = exValue || this.fakeValue(null, null, null, this.ctx);
+      const value = exValue || this.fakeValue();
       // if no value returned, fallback to using leaf resolver
-      return value !== undefined ? value : this.getLeafResolver(type);
+      return value !== undefined ? value : this.getLeafResolver(this.ctx);
     } catch (err) {
       // if error on resolve, fallback to using leaf resolver (ie. generic value by field type)
-      return this.getLeafResolver(type);
+      return this.getLeafResolver(this.ctx);
     }
   }
 }

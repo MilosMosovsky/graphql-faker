@@ -1,10 +1,10 @@
-import { Base } from "../../../../Base";
+import { FakeBase } from "../../../../FakeBase";
 const faker = require("faker");
 
 export const createTypeFakers = config => new TypeFakers(config).resolvers;
 
 // TODO: needs major rewrite/refactor!!!
-export class TypeFakers extends Base {
+export class TypeFakers extends FakeBase {
   opts: any;
   faker: any;
 

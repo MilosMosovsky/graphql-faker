@@ -16,13 +16,13 @@ import {
 } from "./utils";
 import { FieldResolver } from "./field/FieldResolver";
 
-import { Base } from "./Base";
+import { FakeBase } from "./FakeBase";
 
 type TypeMap = {
   [typeName: string]: GraphQLNamedType;
 };
 
-export class FakeSchema extends Base {
+export class FakeSchema extends FakeBase {
   mutationType: GraphQLObjectType;
   typeMap: TypeMap;
   typeMapValues: any[];
@@ -87,9 +87,7 @@ export class FakeSchema extends Base {
   getFieldResolver(field, objectType, fields?: string[]) {
     return new FieldResolver(
       this.schema,
-      field,
-      objectType,
-      fields,
+      { field, objectType, fields },
       this.config
     ).resolver;
   }

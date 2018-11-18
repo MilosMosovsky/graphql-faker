@@ -1,5 +1,5 @@
 import { SampleArgs } from "../../types";
-import { Base } from "../../Base";
+import { FakeBase } from "../../FakeBase";
 import { SampleValue } from "../directives/sample/SampleValue";
 
 type ArrayResolverOpts = {
@@ -8,7 +8,7 @@ type ArrayResolverOpts = {
 };
 
 // currently simply wraps SampleValue but could be extended to have other resolve mechanisms...
-export class ArrayValue extends Base {
+export class ArrayValue extends FakeBase {
   sample: SampleArgs;
   functions: any;
 

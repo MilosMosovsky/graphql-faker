@@ -18,7 +18,7 @@ describe("resolveExample", () => {
   });
 });
 
-import { resolveValues, ExamplesResolver } from "./ExamplesResolver";
+import { resolveResult, ExamplesResolver } from "./ExamplesMapResolver";
 
 describe("ExampleResolver", () => {
   const field = {
@@ -35,11 +35,11 @@ describe("ExampleResolver", () => {
   });
 });
 
-describe("resolveValues", () => {
+describe("resolveResult", () => {
   const obj = {
     values: ["x", "y"]
   };
-  const values = resolveValues(obj);
+  const values = resolveResult(obj);
 
   describe("values", () => {
     test("is defined", () => {

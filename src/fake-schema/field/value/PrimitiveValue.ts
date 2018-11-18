@@ -1,7 +1,7 @@
-import { Base } from "../../Base";
+import { FakeBase } from "../../FakeBase";
 import { Random } from "../directives/fake/fakers";
 
-export class PrimitiveValue extends Base {
+export class PrimitiveValue extends FakeBase {
   type: any;
   field: any;
   directives: any;
@@ -26,7 +26,7 @@ export class PrimitiveValue extends Base {
     }
     if (examples) return () => this.random.genRandom();
     if (fake) {
-      return () => this.fakeValue(fake, this);
+      return () => this.fakeValue();
     }
     const functions = {
       genValue: this.random.genRandom,
