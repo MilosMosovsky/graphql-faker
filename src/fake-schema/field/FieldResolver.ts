@@ -96,7 +96,10 @@ export class FieldResolver extends Base {
   }
 
   resolveLeafType(type, directives) {
-    new PrimitiveValue({ type, field: this.field, directives }, this.config);
+    return new PrimitiveValue(
+      { type, field: this.field, directives },
+      this.config
+    ).resolver;
   }
 
   arrayResolver(functions, sample) {

@@ -15,7 +15,7 @@ export class PrimitiveValue extends Base {
     this.random = new Random({ field, type }, config);
   }
 
-  resolve() {
+  get resolver() {
     const { fake, examples, mock } = this.directives;
     const { field, type } = this;
     if (this.isEnabled("mocking")) {

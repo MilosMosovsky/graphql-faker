@@ -9,6 +9,7 @@ import { createSchemaApi } from "../build-schema";
 import * as path from "path";
 import chalk from "chalk";
 
+// TODO: turn into class
 export function createServerApi({ corsOptions, opts = {}, IDL }: any) {
   const log = console.log;
   const { saveIDL, readIDL } = IDL;
