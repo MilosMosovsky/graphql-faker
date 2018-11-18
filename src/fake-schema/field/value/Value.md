@@ -4,7 +4,13 @@ The value resolvers can be found in `src/fake-schema/field/value`. They each hav
 
 ## PrimitiveValue
 
-The `PrimitiveValue` class ...
+The `PrimitiveValue` class contains a `resolver` getter that attempts to find a resolver for a primitive field value using the followin strategy resolvers (in the order listed):
+
+- `mockResolver`
+- `examplesResolver`
+- `fakeResolver`
+
+If none of these strategies return a resolver function, the `defaultResolver` is used.
 
 ## ArrayValue
 

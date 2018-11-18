@@ -1,11 +1,11 @@
 import * as maps from "./maps";
-import { Base } from "../../Base";
 import {
   createKeyMatcher,
   resolveFromFieldMap,
   funsFor,
   mapsFor
 } from "./common";
+import { Base } from "../../Base";
 
 export class MapResolver extends Base {
   fieldMap: any;

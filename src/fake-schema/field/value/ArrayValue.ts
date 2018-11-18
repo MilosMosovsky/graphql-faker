@@ -1,6 +1,6 @@
 import { SampleArgs } from "../../types";
-import { FakeBase } from "../../FakeBase";
 import { SampleValue } from "../directives/sample/SampleValue";
+import { Base } from "../../Base";
 
 type ArrayResolverOpts = {
   functions: any;
@@ -8,7 +8,7 @@ type ArrayResolverOpts = {
 };
 
 // currently simply wraps SampleValue but could be extended to have other resolve mechanisms...
-export class ArrayValue extends FakeBase {
+export class ArrayValue extends Base {
   sample: SampleArgs;
   functions: any;
 
@@ -20,6 +20,6 @@ export class ArrayValue extends FakeBase {
 
   get resolver() {
     const { sample, functions } = this;
-    return new SampleValue({ sample, functions }).resolver;
+    return new SampleValue({ sample, functions }, this.config).resolver;
   }
 }

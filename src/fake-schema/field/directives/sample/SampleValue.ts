@@ -1,6 +1,7 @@
 import { SampleArgs } from "../../../types";
+import { Base } from "../../../Base";
 
-export class SampleValue {
+export class SampleValue extends Base {
   resolveItem: Function;
   getCount: (min: number, max: number) => number;
 
@@ -9,7 +10,8 @@ export class SampleValue {
   empty: number;
   options: any;
 
-  constructor({ sample, functions }) {
+  constructor({ sample, functions }, config) {
+    super(config);
     const { getCount, resolveItem } = functions;
     this.getCount = getCount;
     this.resolveItem = resolveItem;

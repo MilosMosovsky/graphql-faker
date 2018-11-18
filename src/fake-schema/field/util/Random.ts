@@ -1,20 +1,21 @@
 const faker = require("faker");
 
 import { resolveExamples } from "../resolve";
+import { Base } from "../../Base";
 
 export interface IRandom {
   item: (array: any[]) => any;
   int: (min: number, max: number) => number;
 }
 
-export class Random {
+export class Random extends Base {
   faker: any;
   config: any;
   field: any;
   type: any;
 
   constructor({ field, type }, config) {
-    this.config = config;
+    super(config);
     this.field = field;
     this.type = type;
     this.faker = faker;
