@@ -41,9 +41,7 @@ Currently it has the following main function.
 
 `runServer(schemaIDL: Source, extensionIDL: Source, config = {}, optionsCB)`
 
-- TODO: add a configure method to configure the express app
-- TODO: rename to `run` and only execute listen on configured app
-- TODO: return promise instead or async/await instead of using callback function
+- TODO: return promise instead or async/await instead of using callback function (see `graphqlHTTP` in `express-graphql` module)
 
 ### Runner
 

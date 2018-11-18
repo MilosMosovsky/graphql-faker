@@ -21,6 +21,7 @@ export class Server extends Base {
   opts: any;
   schema: any;
   forwardHeaderNames: string[];
+  app: any;
 
   constructor({ corsOptions, opts = {}, IDL, config = {} }: any) {
     super(config);
@@ -34,13 +35,13 @@ export class Server extends Base {
     );
   }
 
-  runServer(schemaIDL: Source, extensionIDL: Source, config = {}, optionsCB) {
+  configure(schemaIDL: Source, extensionIDL: Source, optionsCB) {
     const { saveIDL } = this.IDL;
     const { build } = this.schema;
-    const { corsOptions, opts, forwardHeaderNames, log } = this;
-    const { open, port } = opts;
+    const { corsOptions, forwardHeaderNames, config } = this;
     const app = express();
     const corsConf = cors(corsOptions);
+    this.app = app;
 
     if (extensionIDL) {
       const schema = build(schemaIDL);
@@ -84,7 +85,15 @@ export class Server extends Base {
     });
 
     app.use("/editor", express.static(path.join(__dirname, "editor")));
+  }
 
+  run(opts) {
+    const { app, log } = this;
+    opts = {
+      ...this.opts,
+      opts
+    };
+    const { open, port } = opts;
     const server = app.listen(opts.port);
 
     const shutdown = () => {
