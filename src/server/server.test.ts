@@ -33,21 +33,21 @@ describe("createServerApi", () => {
     describe("configEditor", () => {
       server.configEditor();
       test("app has /server route handler", () => {
-        expect(server.app).toBeDefined();
+        expect(server.routes.editor).toBe(true);
       });
     });
 
     describe("configEditor", () => {
       server.configGraphQL();
       test("app has /editor route handler", () => {
-        expect(server.app).toBeDefined();
+        expect(server.routes.graphql).toBe(true);
       });
     });
 
     describe("configUserIdl", () => {
       server.configUserIdl();
       test("app has /user-idl route handler", () => {
-        expect(server.app).toBeDefined();
+        expect(server.routes.userIdl).toBe(true);
       });
     });
 
@@ -62,15 +62,15 @@ describe("createServerApi", () => {
       });
 
       test("app has /graphql route handlers", () => {
-        expect(server.app).toBeDefined();
+        expect(server.routes.graphql).toBe(true);
       });
 
       test("app has /editor route handler", () => {
-        expect(server.app).toBeDefined();
+        expect(server.routes.editor).toBe(true);
       });
 
       test("app has /user-idl route handlers", () => {
-        expect(server.app).toBeDefined();
+        expect(server.routes.userIdl).toBe(true);
       });
 
       describe("run", () => {
@@ -87,6 +87,15 @@ describe("createServerApi", () => {
 
           test("opened browser after start", () => {
             expect(server.opened).toBe(true);
+          });
+        });
+
+        describe("server.shutdown", () => {
+          server.exitOnShutdown = false;
+          server.shutdown();
+
+          test("was shutdown", () => {
+            expect(server.wasShutdown).toBe(true);
           });
         });
       });

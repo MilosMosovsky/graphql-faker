@@ -31,6 +31,11 @@ export class Server extends Base {
   callbackFn: any;
   opened: boolean;
   running: boolean;
+  routes: any = {};
+  server: any;
+  shutdown: () => void;
+  wasShutdown: boolean;
+  exitOnShutdown: boolean = true;
 
   constructor({ corsOptions, opts = {}, IDL, config = {} }: any) {
     super(config);
@@ -71,6 +76,7 @@ export class Server extends Base {
   configEditor() {
     const { app } = this;
     app.use("/editor", express.static(path.join(__dirname, "editor")));
+    this.routes.editor = true;
     return this;
   }
 
@@ -98,6 +104,7 @@ export class Server extends Base {
         };
       })
     );
+    this.routes.graphql = true;
     return this;
   }
 
@@ -125,6 +132,7 @@ export class Server extends Base {
         res.status(500).send(err.message);
       }
     });
+    this.routes.userIdl = true;
   }
 
   run(opts: any = {}) {
@@ -134,12 +142,18 @@ export class Server extends Base {
       opts
     };
     const { open, port } = opts;
-    const server = app.listen(opts.port);
+    this.server = app.listen(opts.port);
 
     const shutdown = () => {
-      server.close();
-      process.exit(0);
+      this.server.close();
+      this.running = false;
+      this.wasShutdown = true;
+      if (this.exitOnShutdown) {
+        process.exit(0);
+      }
     };
+
+    this.shutdown = shutdown;
 
     process.on("SIGINT", shutdown);
     process.on("SIGTERM", shutdown);
