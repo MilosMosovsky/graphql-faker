@@ -77,11 +77,15 @@ The `PrimitiveValue` class ...
 
 ### ArrayValue
 
-The `ArrayValue` class ...
+The `ArrayValue` class resolves an array by default using `SampleValue` resolver (using `@sample` directive)
 
 ### DefaultValue
 
-The `DefaultValue` class ...
+The `DefaultValue` class resolves a field to a value by trying various strategies
+
+First tries using `fakeValue`, which looks up in `fakes` and `examples` maps for a field match to be resolved.
+
+If `fakeValue` is unable to resolve field to a value or throws an error, it falls back to a leaf type resolver via `getLeafResolver`, resolving field based on the primitive type.
 
 ## Directives
 

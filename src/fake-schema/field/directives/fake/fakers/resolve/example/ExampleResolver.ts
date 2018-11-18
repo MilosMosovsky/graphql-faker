@@ -1,4 +1,4 @@
-import { examples as exampleMaps } from "../fake/fakers/maps";
+import { examples as exampleMaps } from "../../../maps";
 import {
   createKeyMatcher,
   resolveFromFieldMap,

@@ -1,4 +1,4 @@
-import { resolveFake, resolveResult } from "./fake";
+import { resolveFake } from "./";
 
 // re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
 // Allow `matches` list for both, using `resolveMatches`
@@ -38,6 +38,7 @@ describe("resolveFake", () => {
   });
 });
 
+import { resolveResult } from "./FakeResolver";
 describe("resolveResult", () => {
   const type = "lorem";
   const value = {

@@ -1,12 +1,11 @@
-import * as maps from "../../maps";
+import { fakes as fakeMaps } from "../../../maps";
 import {
   resolveTypeFieldMap,
   resolveFromFieldMap,
   createKeyMatcher,
   mapsFor,
   funsFor
-} from "./common";
-const { fakes } = maps;
+} from "../common";
 
 export const isValidResult = value => {
   return typeof value === "string" || value.faker;
@@ -19,12 +18,6 @@ export const resolveResult = ({ value, key }: any = {}) => {
     return { faker: value.faker, options: value.options || {} };
   }
   return $default;
-};
-
-// re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
-// Allow `matches` list for both, using `resolveMatches`
-export const resolveFake = ({ type, field, fields = [], config = {} }: any) => {
-  return new FakeResolver({ type, field, fields, config }).resolve();
 };
 
 // TODO: Almost same as for Example, extract into BaseResolver class
@@ -43,7 +36,7 @@ export class FakeResolver {
     const fieldType = field.type;
 
     const funs = funsFor("fakes", config);
-    const maps = mapsFor("fakes", fakes, config);
+    const maps = mapsFor("fakes", fakeMaps, config);
 
     const typeMap = maps.typeMap || {};
     this.fieldMap = maps.fieldMap || {};
