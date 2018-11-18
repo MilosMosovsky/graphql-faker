@@ -2,8 +2,12 @@ import * as fs from "fs";
 import { Source } from "graphql";
 import chalk from "chalk";
 import { Base } from "../Base";
+export function readIdl(idl, opts = {}, config = {}) {
+  const idlApi = createIdl(opts, config);
+  return idlApi.readIDL(idl);
+}
 
-export function createIdlApi(opts: any, config: any) {
+export function createIdl(opts: any = {}, config: any = {}) {
   return new Idl(opts, config);
 }
 
@@ -11,7 +15,7 @@ export class Idl extends Base {
   opts: any;
   fileName: string;
 
-  constructor(opts: any, config: any) {
+  constructor(opts: any = {}, config: any = {}) {
     super(config);
     this.opts = opts;
     const { fileName } = opts;

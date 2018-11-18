@@ -26,7 +26,7 @@ export class ServerSchema extends Base {
 
     const fakeDefFile = opts.fakeDefFile || "fake-definition.graphql";
     const fakeDefFilePath =
-      opts.fakeDefFilePath || path.join(__dirname, "typedefs", fakeDefFile);
+      opts.fakeDefFilePath || path.join(this.rootPath, "typedefs", fakeDefFile);
 
     this.fakeDefinitionAST = this.readAST(fakeDefFilePath);
   }

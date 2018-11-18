@@ -1,22 +1,53 @@
 import { createServer } from ".";
+import { readIdl } from "../idl";
 
-const idl = `
+const _idl = `
   type Person {
     name: String
   }
 `;
 
+const _schemaIdl = `
+  type Person {
+    name: String
+  }
+`;
+
+const _extIdl = `
+type Person {
+  name: String
+}
+`;
+
 describe("createServerApi", () => {
-  const readIDL = async () => idl;
-  const saveIDL = async () => undefined;
+  let store: any = {};
+  const readIDL = readIdl;
+  const saveIDL = async idl => (store.saved = idl);
   const IDL = { readIDL, saveIDL };
   const corsOptions = {};
   const opts = {};
-  const api = createServer({ corsOptions, opts, IDL });
+  const server = createServer({ corsOptions, opts, IDL });
 
-  describe("api", () => {
+  describe("server", () => {
+    const schemaIDL = readIdl(_schemaIdl);
+    const extensionIDL = readIdl(_extIdl);
+
     test("is defined", () => {
-      expect(api).toBeDefined();
+      expect(server).toBeDefined();
+    });
+
+    describe("configure", () => {
+      const callbackFn = () => {
+        console.log("configured");
+      };
+      server.configure(schemaIDL, extensionIDL, callbackFn);
+    });
+
+    describe("configure", () => {
+      const callbackFn = () => {
+        console.log("configured");
+      };
+      server.configure(schemaIDL, extensionIDL, callbackFn);
     });
   });
 });
