@@ -1,5 +1,5 @@
 import { fakeSchema } from ".";
-import { createSchemaApi } from "../build-schema";
+import { createServerSchema } from "../server-schema";
 
 const idl = `
   type Person {
@@ -9,11 +9,20 @@ const idl = `
 
 describe("fakeSchema", () => {
   const readIDL = async () => idl;
-  const { buildServerSchema } = createSchemaApi({ readIDL });
-  const schema = buildServerSchema({ idl });
+  const serverSchema = createServerSchema({ readIDL });
+  const schema = serverSchema.build({ idl });
 
-  describe("schema and no config", () => {
+  describe("schema - no config", () => {
     const fakedSchema = fakeSchema(schema);
+
+    test("schema", () => {
+      expect(fakedSchema).toBeDefined();
+    });
+  });
+
+  describe("schema - with config", () => {
+    const config = {};
+    const fakedSchema = fakeSchema(schema, config);
 
     test("schema", () => {
       expect(fakedSchema).toBeDefined();

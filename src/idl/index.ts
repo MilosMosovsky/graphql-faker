@@ -2,9 +2,9 @@ import * as fs from "fs";
 import { Source } from "graphql";
 import chalk from "chalk";
 import { Base } from "../Base";
-export function readIdl(idl, opts = {}, config = {}) {
+export function readIdl(filepath, opts = {}, config = {}) {
   const idlApi = createIdl(opts, config);
-  return idlApi.readIDL(idl);
+  return idlApi.readIDL(filepath);
 }
 
 export function createIdl(opts: any = {}, config: any = {}) {

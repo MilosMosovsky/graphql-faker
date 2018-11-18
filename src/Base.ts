@@ -19,7 +19,7 @@ export class Base {
   }
 
   isEnabled(name) {
-    const enabled = this.config.enabled;
+    const enabled = this.config.enable || {};
     return enabled[name];
   }
 

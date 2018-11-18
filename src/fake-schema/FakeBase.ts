@@ -12,7 +12,7 @@ export class FakeBase extends Base {
   typeMapValues: any[];
   schema: GraphQLSchema;
 
-  constructor(config, schema?) {
+  constructor(config = {}, schema?) {
     super(config);
     this.setSchema(schema);
   }

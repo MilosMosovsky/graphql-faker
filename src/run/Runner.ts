@@ -19,6 +19,10 @@ export class Runner extends Base {
   server: any;
   idlApi: any;
   fileName: string;
+  running: boolean;
+  failedStart: boolean;
+  err: any;
+  mode: string;
 
   constructor(opts: any = {}, config = {}) {
     super(config);
@@ -68,36 +72,54 @@ export class Runner extends Base {
     }
   }
 
-  run() {
+  run(readyCallback?: Function) {
     const { opts } = this;
     let { extendUrl } = opts;
     this.setUserIdl();
-    extendUrl ? this.runProxyMode() : this.runNormalMode();
+    extendUrl ? this.runProxyMode(readyCallback) : this.runNormalMode();
   }
 
   runNormalMode() {
-    const { server, userIDL, configObj } = this;
-    server
-      .configure(userIDL, null, schema => {
-        fakeSchema(schema, configObj);
-        return { schema };
-      })
-      .run();
+    const { server, userIDL, configObj, handleRunErr } = this;
+    try {
+      server
+        .configure(userIDL, null, schema => {
+          fakeSchema(schema, configObj);
+          return { schema };
+        })
+        .run();
+      this.mode = "normal";
+      this.running = server.running;
+      return server;
+    } catch (err) {
+      handleRunErr(err);
+    }
   }
 
-  runProxyMode() {
+  runProxyMode(readyCallback?: Function) {
     let { extendUrl, headers } = this.opts;
-    const { userIDL } = this;
+    const { userIDL, server, handleRunErr } = this;
     // run in proxy mode
     const url = extendUrl;
     proxyMiddleware(url, headers)
       .then(([schemaIDL, cb]) => {
         schemaIDL = new Source(schemaIDL, `Inrospection from "${url}"`);
-        this.server.configure(schemaIDL, userIDL, cb).run();
+        server.configure(schemaIDL, userIDL, cb).run();
+        this.running = server.running;
+        this.mode = "proxy";
+        readyCallback && readyCallback();
       })
-      .catch(error => {
-        this.error(chalk.red(error.stack));
-        process.exit(1);
+      .catch(err => {
+        handleRunErr(err);
       });
+  }
+
+  handleRunErr(err) {
+    const { error } = this;
+    this.running = false;
+    this.failedStart = true;
+    this.err = err;
+    error(chalk.red(err.stack));
+    process.exit(1);
   }
 }

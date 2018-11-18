@@ -12,6 +12,14 @@ import { FakeBase } from "../FakeBase";
 import { ArrayValue } from "./value/ArrayValue";
 import { PrimitiveValue } from "./value/PrimitiveValue";
 
+export function createFieldResolver(schema, ctx, config): FieldResolver {
+  return new FieldResolver(schema, ctx, config);
+}
+
+export function getFieldResolver(schema, ctx, config): Function {
+  return createFieldResolver(schema, ctx, config).resolver;
+}
+
 export class FieldResolver extends FakeBase {
   type: any;
   field: any;

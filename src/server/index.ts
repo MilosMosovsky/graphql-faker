@@ -29,6 +29,8 @@ export class Server extends Base {
   schemaIDL: any;
   extensionIDL: any;
   callbackFn: any;
+  opened: boolean;
+  running: boolean;
 
   constructor({ corsOptions, opts = {}, IDL, config = {} }: any) {
     super(config);
@@ -151,7 +153,10 @@ export class Server extends Base {
     `);
 
     if (open) {
+      this.opened = true;
       setTimeout(() => opn(`http://localhost:${port}/editor`), 500);
     }
+    this.running = true;
+    return this;
   }
 }

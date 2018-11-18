@@ -1,12 +1,6 @@
 import { createServer } from ".";
 import { readIdl } from "../idl";
 
-const _idl = `
-  type Person {
-    name: String
-  }
-`;
-
 const _schemaIdl = `
   type Person {
     name: String
@@ -36,11 +30,25 @@ describe("createServerApi", () => {
       expect(server).toBeDefined();
     });
 
-    describe("configure", () => {
-      const callbackFn = () => {
-        console.log("configured");
-      };
-      server.configure(schemaIDL, extensionIDL, callbackFn);
+    describe("configEditor", () => {
+      server.configEditor();
+      test("app has /server route handler", () => {
+        expect(server.app).toBeDefined();
+      });
+    });
+
+    describe("configEditor", () => {
+      server.configGraphQL();
+      test("app has /editor route handler", () => {
+        expect(server.app).toBeDefined();
+      });
+    });
+
+    describe("configUserIdl", () => {
+      server.configUserIdl();
+      test("app has /user-idl route handler", () => {
+        expect(server.app).toBeDefined();
+      });
     });
 
     describe("configure", () => {
@@ -48,6 +56,40 @@ describe("createServerApi", () => {
         console.log("configured");
       };
       server.configure(schemaIDL, extensionIDL, callbackFn);
+
+      test("app is ready and listens on port", () => {
+        expect(server.app).toBeDefined();
+      });
+
+      test("app has /graphql route handlers", () => {
+        expect(server.app).toBeDefined();
+      });
+
+      test("app has /editor route handler", () => {
+        expect(server.app).toBeDefined();
+      });
+
+      test("app has /user-idl route handlers", () => {
+        expect(server.app).toBeDefined();
+      });
+
+      describe("run", () => {
+        describe("default", () => {
+          server.run();
+
+          test("app listening on port", () => {
+            expect(server.app).toBeDefined();
+          });
+        });
+
+        describe("open", () => {
+          server.run({ open: true });
+
+          test("opened browser after start", () => {
+            expect(server.opened).toBe(true);
+          });
+        });
+      });
     });
   });
 });
