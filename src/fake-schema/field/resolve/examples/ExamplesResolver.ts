@@ -1,4 +1,4 @@
-import { examples as exampleMaps } from "../../../maps";
+import { examples as exampleMaps } from "../maps";
 import {
   createKeyMatcher,
   resolveFromFieldMap,
@@ -13,7 +13,7 @@ export const resolveValues = obj => {
   if (obj.values) return obj.values;
 };
 
-export class ExampleResolver {
+export class ExamplesResolver {
   typeFieldMap: any;
   fieldMap: any;
   resolveFromFieldMap: any;

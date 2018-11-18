@@ -1,6 +1,6 @@
 const faker = require("faker");
 
-import { resolveExample } from "./resolve";
+import { resolveExamples } from "../resolve";
 
 export class Random {
   faker: any;
@@ -28,7 +28,7 @@ export class Random {
   }
 
   createArray() {
-    return resolveExample({
+    return resolveExamples({
       field: this.field,
       type: this.type,
       config: this.config

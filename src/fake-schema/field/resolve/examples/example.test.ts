@@ -1,4 +1,4 @@
-import { resolveExample } from ".";
+import { resolveExamples } from ".";
 
 // re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
 // Allow `matches` list for both, using `resolveMatches`
@@ -9,7 +9,7 @@ describe("resolveExample", () => {
     type: "String"
   };
   const type = "Person";
-  const example = resolveExample({ field, type });
+  const example = resolveExamples({ field, type });
 
   describe("example", () => {
     test("is defined", () => {
@@ -18,7 +18,7 @@ describe("resolveExample", () => {
   });
 });
 
-import { resolveValues, ExampleResolver } from "./ExampleResolver";
+import { resolveValues, ExamplesResolver } from "./ExamplesResolver";
 
 describe("ExampleResolver", () => {
   const field = {
@@ -26,7 +26,7 @@ describe("ExampleResolver", () => {
     type: "String"
   };
   const type = "Person";
-  const resolver = new ExampleResolver({ field, type });
+  const resolver = new ExamplesResolver({ field, type });
 
   describe("resolver", () => {
     test("is defined", () => {

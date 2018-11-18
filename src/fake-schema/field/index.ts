@@ -1,2 +1,6 @@
-export { FieldResolver } from "./FieldResolver";
-export { ArrayValue } from "./value/ArrayValue";
+import * as directives from "./directives";
+import * as resolve from "./resolve";
+import * as util from "./util";
+import * as value from "./value";
+
+export { directives, resolve, util, value };

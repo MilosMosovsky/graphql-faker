@@ -1,4 +1,4 @@
-import { fakes as fakeMaps } from "../../../maps";
+import { fakes as fakeMaps } from "../maps";
 import {
   resolveTypeFieldMap,
   resolveFromFieldMap,
@@ -21,7 +21,7 @@ export const resolveResult = ({ value, key }: any = {}) => {
 };
 
 // TODO: Almost same as for Example, extract into BaseResolver class
-export class FakeResolver {
+export class FakesResolver {
   fieldMap: any;
   ctx: any;
   typeFieldMap: any;

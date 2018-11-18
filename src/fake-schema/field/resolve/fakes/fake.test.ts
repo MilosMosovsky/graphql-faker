@@ -1,4 +1,4 @@
-import { resolveFake } from "./";
+import { resolveFakes } from "./";
 
 // re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
 // Allow `matches` list for both, using `resolveMatches`
@@ -8,7 +8,7 @@ describe("resolveFake", () => {
     type: "String",
     name: "firstName"
   };
-  const fake = resolveFake({ type, field });
+  const fake = resolveFakes({ type, field });
 
   describe("fake", () => {
     test("is defined", () => {
@@ -28,7 +28,7 @@ describe("resolveFake", () => {
     };
     const fields = ["firstName", "lastName"];
 
-    const fake = resolveFake({ type, field, fields, config });
+    const fake = resolveFakes({ type, field, fields, config });
 
     describe("fake", () => {
       test("is defined", () => {
@@ -38,7 +38,7 @@ describe("resolveFake", () => {
   });
 });
 
-import { resolveResult } from "./FakeResolver";
+import { resolveResult } from "./FakesResolver";
 describe("resolveResult", () => {
   const type = "lorem";
   const value = {

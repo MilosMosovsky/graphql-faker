@@ -3,7 +3,7 @@ const faker = require("faker");
 import { createFakeFunctions } from "./functions";
 import { createTypeFakers } from "./TypeFakers";
 export { createTypeFakers, createFakeFunctions };
-import { resolveFake } from "./resolve";
+import { resolveFakes } from "../../../resolve";
 import { Base } from "../../../../Base";
 
 export const createFakers = config => new Fakers(config);
@@ -15,7 +15,7 @@ export class Fakers extends Base {
   config: any;
   fakeFunctions: any;
   typeFakers: any;
-  resolveFake: Function;
+  resolveFakes: Function;
   error: Function;
 
   constructor(config) {
@@ -27,7 +27,7 @@ export class Fakers extends Base {
     const directives = resolvers.directives || {};
     const { fake } = directives;
 
-    this.resolveFake = fake.resolveFake || resolveFake;
+    this.resolveFakes = fake.resolveFakes || resolveFakes;
     this.error = config.error;
     this.faker = config.faker || faker;
 
@@ -44,7 +44,7 @@ export class Fakers extends Base {
   resolveValue({ type, options, locale }, ctx: any = {}) {
     const { field, fields } = ctx;
     const typeName = type; // ctx.type ??
-    const resolvedFake = this.resolveFake({
+    const resolvedFake = this.resolveFakes({
       type: typeName,
       field,
       fields,
