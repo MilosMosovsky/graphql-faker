@@ -1,7 +1,7 @@
 const faker = require("faker");
 
 import { resolveExamples } from "../resolve";
-import { Base } from "../../Base";
+import { Base } from "../../../Base";
 
 export interface IRandom {
   item: (array: any[]) => any;

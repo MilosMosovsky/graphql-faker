@@ -37,11 +37,25 @@ Extends `Base` class and provides some key methods for use in classes that resol
 
 Use `createServer` to create a `Server` class instance. Extend the `Server` class to customize it to your needs.
 
-Currently it has the following main function.
+The main `configure` method:
 
-`runServer(schemaIDL: Source, extensionIDL: Source, config = {}, optionsCB)`
+- `configure(schemaIDL: Source, extensionIDL: Source, config = {}, optionsCB)`
 
-- TODO: return promise instead or async/await instead of using callback function (see `graphqlHTTP` in `express-graphql` module)
+Configures each of the `app` endpoints:
+
+- `/graphql`
+- `/editor`
+- `/userIdl`
+
+Using:
+
+- `configGraphQL()`
+- `configEditor()`
+- `configUserIdl()`
+
+To run the configured server, call the `run` method:
+
+- `run({open, port})`
 
 ### Runner
 

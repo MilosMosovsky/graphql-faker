@@ -1,5 +1,5 @@
 import { SampleArgs } from "../../../types";
-import { Base } from "../../../Base";
+import { Base } from "../../../../Base";
 
 export class SampleValue extends Base {
   resolveItem: Function;

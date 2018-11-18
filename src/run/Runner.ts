@@ -46,7 +46,7 @@ export class Runner extends Base {
       }
     }
 
-    const { runServer } = createServer({ corsOptions, opts });
+    const { run } = createServer({ corsOptions, opts });
     let configObj;
     try {
       configObj = config || jsonfile.readFileSync(configPath);
@@ -61,14 +61,14 @@ export class Runner extends Base {
       proxyMiddleware(url, headers)
         .then(([schemaIDL, cb]) => {
           schemaIDL = new Source(schemaIDL, `Inrospection from "${url}"`);
-          runServer(schemaIDL, userIDL, config, cb);
+          run(schemaIDL, userIDL, config, cb);
         })
         .catch(error => {
           log(chalk.red(error.stack));
           process.exit(1);
         });
     } else {
-      runServer(userIDL, null, config, schema => {
+      run(userIDL, null, config, schema => {
         fakeSchema(schema, configObj);
         return { schema };
       });

@@ -5,7 +5,7 @@ import { pick } from "lodash";
 import { Source } from "graphql";
 import * as express from "express";
 import * as graphqlHTTP from "express-graphql";
-import { createServerSchema } from "../server-schema";
+import { createServerSchema, buildServerSchema } from "../server-schema";
 import * as path from "path";
 import chalk from "chalk";
 import { Base } from "../Base";
@@ -15,6 +15,10 @@ export function createServer(opts: any = {}) {
   return new Server(opts);
 }
 
+export function runServer(opts: any = {}, schemaIDL, extensionIDL, optionsCB) {
+  return new Server(opts).configure(schemaIDL, extensionIDL, optionsCB).run();
+}
+
 export class Server extends Base {
   corsOptions: any;
   IDL: any;
@@ -22,6 +26,9 @@ export class Server extends Base {
   schema: any;
   forwardHeaderNames: string[];
   app: any;
+  schemaIDL: any;
+  extensionIDL: any;
+  callbackFn: any;
 
   constructor({ corsOptions, opts = {}, IDL, config = {} }: any) {
     super(config);
@@ -35,12 +42,13 @@ export class Server extends Base {
     );
   }
 
-  configure(schemaIDL: Source, extensionIDL: Source, optionsCB) {
-    const { saveIDL } = this.IDL;
+  configure(schemaIDL: Source, extensionIDL: Source, callbackFn: Function) {
+    this.schemaIDL = schemaIDL;
+    this.extensionIDL = extensionIDL;
+    this.callbackFn = callbackFn;
+
     const { build } = this.schema;
-    const { corsOptions, forwardHeaderNames, config } = this;
     const app = express();
-    const corsConf = cors(corsOptions);
     this.app = app;
 
     if (extensionIDL) {
@@ -50,19 +58,51 @@ export class Server extends Base {
         schema.getQueryType().name
       );
     }
+
+    this.configEditor()
+      .configGraphQL()
+      .configUserIdl();
+
+    return this;
+  }
+
+  configEditor() {
+    const { app } = this;
+    app.use("/editor", express.static(path.join(__dirname, "editor")));
+    return this;
+  }
+
+  configGraphQL() {
+    const {
+      app,
+      schemaIDL,
+      extensionIDL,
+      forwardHeaderNames,
+      config,
+      callbackFn
+    } = this;
+    const corsConf = cors(this.corsOptions);
+
     app.options("/graphql", corsConf);
     app.use(
       "/graphql",
       corsConf,
       graphqlHTTP(req => {
-        const schema = build(schemaIDL);
+        const schema = buildServerSchema(schemaIDL);
         const forwardHeaders = pick(req.headers, forwardHeaderNames);
         return {
-          ...optionsCB(schema, extensionIDL, forwardHeaders, config),
+          ...callbackFn(schema, extensionIDL, forwardHeaders, config),
           graphiql: true
         };
       })
     );
+    return this;
+  }
+
+  configUserIdl() {
+    const { app } = this;
+    let { schemaIDL, extensionIDL } = this;
+    const { saveIDL } = this.IDL;
 
     app.get("/user-idl", (_, res) => {
       res.status(200).json({
@@ -83,11 +123,9 @@ export class Server extends Base {
         res.status(500).send(err.message);
       }
     });
-
-    app.use("/editor", express.static(path.join(__dirname, "editor")));
   }
 
-  run(opts) {
+  run(opts: any = {}) {
     const { app, log } = this;
     opts = {
       ...this.opts,

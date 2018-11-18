@@ -5,7 +5,7 @@ import {
   funsFor,
   mapsFor
 } from "./common";
-import { Base } from "../../Base";
+import { Base } from "../../../Base";
 
 export class MapResolver extends Base {
   fieldMap: any;

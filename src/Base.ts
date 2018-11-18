@@ -1,4 +1,4 @@
-import { log } from "./utils";
+import { log } from "./fake-schema/utils";
 
 export class Base {
   config: any;

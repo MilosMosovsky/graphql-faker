@@ -1,4 +1,4 @@
-import { createSchemaApi } from ".";
+import { createServerSchema } from ".";
 
 const idl = `
   type Person {
@@ -9,7 +9,7 @@ const idl = `
 describe("createSchemaApi", () => {
   describe("with idl", () => {
     const readIDL = async () => idl;
-    const { build } = createSchemaApi({ readIDL });
+    const { build } = createServerSchema({ readIDL });
     const schema = build({ idl });
 
     test("schema", () => {
