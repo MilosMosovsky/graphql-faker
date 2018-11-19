@@ -31,4 +31,4 @@ Returns function to resolve a relay mutation
 
 ## Field
 
-See [Field](./Field.md)
+See [Field](./field/Field.md)

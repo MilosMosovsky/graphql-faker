@@ -1,4 +1,4 @@
-import { DefaultValue } from "./DefaultValue";
+import { DefaultType } from "./DefaultType";
 
 describe("DefaultValue", () => {
   describe("instance", () => {
@@ -6,7 +6,7 @@ describe("DefaultValue", () => {
     const field = {};
     const config = {};
 
-    const resolver = new DefaultValue(functions, { field }, config);
+    const resolver = new DefaultType(functions, { field }, config);
     test("is defined", () => {
       expect(resolver).toBeDefined();
     });
