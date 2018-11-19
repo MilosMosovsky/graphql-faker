@@ -26,4 +26,13 @@ export class Base {
   get rootPath() {
     return path.join(__dirname, "..");
   }
+
+  validateFunction({ method, functionName, func, data, error }) {
+    if (typeof func !== "function") {
+      error(`${method}: missing or invalid ${functionName} function`, {
+        [functionName]: func,
+        ...data
+      });
+    }
+  }
 }

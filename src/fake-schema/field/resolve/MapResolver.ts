@@ -1,13 +1,9 @@
 import * as maps from "./maps";
-import {
-  createKeyMatcher,
-  resolveFromFieldMap,
-  funsFor,
-  mapsFor
-} from "./common";
-import { Base } from "../../../Base";
+import { BaseMapResolver } from "./common/BaseResolver";
+import { resolveFromFieldMap } from "./common/FieldMap";
+import { createKeyMatcher } from "./common/KeyMatcher";
 
-export class MapResolver extends Base {
+export class MapResolver extends BaseMapResolver {
   fieldMap: any;
   context: any;
   typeFieldMap: any;
@@ -15,7 +11,7 @@ export class MapResolver extends Base {
   functions: any;
 
   constructor(confName, ctx: any = {}, config: any = {}) {
-    super(config);
+    super(ctx, config);
     const { type, field } = ctx;
     const error = config.error;
     const log = config.log || console.log;
@@ -23,8 +19,8 @@ export class MapResolver extends Base {
     const fieldName = field.name;
     const fieldType = field.type;
 
-    const confMap = mapsFor(confName, maps, config);
-    const funs = funsFor(confName, config);
+    const confMap = this.mapsFor(confName, maps);
+    const funs = this.funsFor(confName);
 
     const typeMap = confMap.typeMap || {};
     this.fieldMap = confMap.fieldMap || {};

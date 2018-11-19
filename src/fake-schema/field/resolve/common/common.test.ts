@@ -1,4 +1,4 @@
-import { createKeyMatcher } from "./common";
+import { createKeyMatcher } from "./KeyMatcher";
 
 // re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
 // Allow `matches` list for both, using `resolveMatches`
@@ -22,7 +22,7 @@ describe("createKeyMatcher", () => {
 
   const ctx: any = {};
   const key = "x";
-  const matchKey = createKeyMatcher(ctx);
+  const matchKey = createKeyMatcher(ctx).resolver;
   const value = matchKey(key);
 
   describe("value", () => {
