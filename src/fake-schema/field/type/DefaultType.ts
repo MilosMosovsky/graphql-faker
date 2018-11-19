@@ -1,6 +1,6 @@
 import { FakeBase } from "../../FakeBase";
 
-export class DefaultValue extends FakeBase {
+export class DefaultType extends FakeBase {
   ctx: any;
   genValue: Function;
 

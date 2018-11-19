@@ -1,7 +1,7 @@
 import { FakeBase } from "../../FakeBase";
 import { Random } from "../directives/fake/fakers";
 
-export class PrimitiveValue extends FakeBase {
+export class PrimitiveType extends FakeBase {
   type: any;
   field: any;
   directives: any;

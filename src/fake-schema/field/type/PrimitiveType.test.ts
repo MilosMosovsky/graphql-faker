@@ -1,4 +1,4 @@
-import { PrimitiveValue } from "./PrimitiveValue";
+import { PrimitiveType } from "./PrimitiveType";
 
 describe("PrimitiveValue", () => {
   describe("instance", () => {
@@ -7,7 +7,7 @@ describe("PrimitiveValue", () => {
     const config = {};
     const directives = {};
 
-    const resolver = new PrimitiveValue({ type, field, directives }, config);
+    const resolver = new PrimitiveType({ type, field, directives }, config);
     test("is defined", () => {
       expect(resolver).toBeDefined();
     });

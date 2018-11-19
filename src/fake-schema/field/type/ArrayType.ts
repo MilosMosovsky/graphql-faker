@@ -8,7 +8,7 @@ type ArrayResolverOpts = {
 };
 
 // currently simply wraps SampleValue but could be extended to have other resolve mechanisms...
-export class ArrayValue extends Base {
+export class ArrayType extends Base {
   sample: SampleArgs;
   functions: any;
 
