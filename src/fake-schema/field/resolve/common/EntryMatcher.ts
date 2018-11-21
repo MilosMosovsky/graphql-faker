@@ -1,4 +1,4 @@
-import { BaseMapResolver } from "./BaseResolver";
+import { BaseMapResolver } from "./BaseMapResolver";
 
 const escapeStrRegexp = require("escape-string-regexp");
 

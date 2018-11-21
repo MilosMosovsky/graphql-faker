@@ -9,8 +9,7 @@ import {
 
 import { getFakeDirectives } from "../utils";
 import { FakeBase } from "../FakeBase";
-import { ArrayValue } from "./value/ArrayValue";
-import { PrimitiveValue } from "./value/PrimitiveValue";
+import { PrimitiveType, ArrayType } from "./type";
 
 export function createFieldResolver(schema, ctx, config): FieldResolver {
   return new FieldResolver(schema, ctx, config);
@@ -106,13 +105,13 @@ export class FieldResolver extends FakeBase {
   }
 
   resolveLeafType(type, directives) {
-    return new PrimitiveValue(
+    return new PrimitiveType(
       { type, field: this.field, directives },
       this.config
     ).resolver;
   }
 
   arrayResolver(functions, sample) {
-    return new ArrayValue({ functions, sample }, this.config).resolver;
+    return new ArrayType({ functions, sample }, this.config).resolver;
   }
 }

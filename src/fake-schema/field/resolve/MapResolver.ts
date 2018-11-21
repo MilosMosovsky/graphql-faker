@@ -1,5 +1,5 @@
 import * as maps from "./maps";
-import { BaseMapResolver } from "./common/BaseResolver";
+import { BaseMapResolver } from "./common/BaseMapResolver";
 import { resolveFromFieldMap } from "./common/FieldMap";
 import { createKeyMatcher } from "./common/KeyMatcher";
 
