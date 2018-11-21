@@ -23,7 +23,10 @@ export class FieldMap extends Base {
   constructor(ctx: any, config = {}) {
     super(config);
     this.ctx = ctx;
-    this.createKeyMatcher = ctx.functions.createKeyMatcher || {};
+    if (!ctx.functions) {
+      this.error("missing functions entry on context");
+    }
+    this.createKeyMatcher = ctx.functions.createKeyMatcher;
     this.matchKey = this.createKeyMatcher(this.ctx);
   }
 

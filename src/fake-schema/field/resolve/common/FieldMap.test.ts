@@ -1,7 +1,14 @@
 import { FieldMap } from "./FieldMap";
 
 describe("FieldMap", () => {
-  const ctx: any = {};
+  const ctx: any = {
+    valid: {
+      functions: {
+        createKeyMatcher: () => ({})
+      }
+    },
+    invalid: {}
+  };
   const config = {
     resolvers: {
       maps: {
@@ -20,9 +27,18 @@ describe("FieldMap", () => {
     }
   };
 
-  const fieldMap = new FieldMap(ctx, config);
+  describe("new", () => {
+    test("invalid ctx throws", () => {
+      expect(() => new FieldMap(ctx.invalid, config)).toThrow();
+    });
+
+    test("valid ctx does not throw", () => {
+      expect(() => new FieldMap(ctx.valid, config)).not.toThrow();
+    });
+  });
 
   describe("instance", () => {
+    const fieldMap = new FieldMap(ctx.valid, config);
     test("defined", () => {
       expect(fieldMap).toBeDefined();
     });

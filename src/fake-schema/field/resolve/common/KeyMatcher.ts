@@ -15,6 +15,9 @@ export class KeyMatcher extends EntryMatcher {
   constructor(ctx: any = {}, config = {}) {
     super(ctx, config);
     const { fieldMap, fieldType, typeName, functions } = ctx;
+    if (!functions) {
+      this.error("missing functions entry on context");
+    }
     this.functions = functions;
     const { isValidResult } = functions;
     this.isValidResult = isValidResult;

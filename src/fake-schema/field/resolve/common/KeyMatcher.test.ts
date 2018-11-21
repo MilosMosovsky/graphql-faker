@@ -1,7 +1,46 @@
-import { createKeyMatcher } from "./KeyMatcher";
+import { createKeyMatcher, KeyMatcher } from "./KeyMatcher";
 
 // re-align `typeFieldMap` and `fieldMap` (resolve examples and fakes), using a generic `resultResolver`.
 // Allow `matches` list for both, using `resolveMatches`
+
+describe("FieldMap", () => {
+  const ctx: any = {
+    valid: {
+      functions: {
+        createKeyMatcher: () => ({})
+      }
+    },
+    invalid: {}
+  };
+  const config = {
+    resolvers: {
+      maps: {
+        fakes: {
+          resolveResult: () => 1
+        }
+      }
+    },
+    maps: {
+      fakes: {
+        x: 1
+      },
+      examples: {
+        x: 2
+      }
+    }
+  };
+
+  describe("new", () => {
+    test("invalid ctx throws", () => {
+      expect(() => new KeyMatcher(ctx.invalid, config)).toThrow();
+    });
+
+    test("valid ctx does not throw", () => {
+      expect(() => new KeyMatcher(ctx.valid, config)).not.toThrow();
+    });
+  });
+});
+
 describe("createKeyMatcher", () => {
   // fieldMap,
   // type,
