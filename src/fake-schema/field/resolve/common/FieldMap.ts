@@ -1,6 +1,6 @@
 import { Base } from "../../../../Base";
 
-export function resolveFromFieldMap(ctx, config) {
+export function resolveFromFieldMap(ctx, config?) {
   return new FieldMap(ctx, config).resolve();
 }
 
@@ -23,10 +23,15 @@ export class FieldMap extends Base {
   constructor(ctx: any, config = {}) {
     super(config);
     this.ctx = ctx;
-    if (!ctx.functions) {
+    const { fieldMap, functions } = ctx;
+    if (!functions) {
       this.error("missing functions entry on context");
     }
-    this.createKeyMatcher = ctx.functions.createKeyMatcher;
+    if (!fieldMap) {
+      this.error("missing fieldMap");
+    }
+    this.fieldMap = fieldMap;
+    this.createKeyMatcher = functions.createKeyMatcher;
     this.matchKey = this.createKeyMatcher(this.ctx);
   }
 

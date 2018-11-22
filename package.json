@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "bin": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon -e ts --exec 'ts-node src/index.ts'",
     "debug": "ts-node --inspect --compilerOptions '{\"inlineSources\":true}' src/index.ts",
     "build:editor": "cd src/editor && yarn && npm run build && cd -",
@@ -34,10 +34,11 @@
     "@types/jest": "^23.3.9",
     "@types/lodash": "4.14.116",
     "@types/yargs": "11.1.1",
+    "jest": "^23.6.0",
     "nodemon": "1.18.3",
     "ts-jest": "^23.10.4",
     "ts-node": "7.0.1",
-    "typescript": "3.1.1"
+    "typescript": "^3.1.6"
   },
   "dependencies": {
     "body-parser": "1.18.3",
