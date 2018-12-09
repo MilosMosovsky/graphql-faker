@@ -1,4 +1,4 @@
-import { MapResolver } from "../MapResolver";
+import { TypeMapResolver } from "resolve-type-maps";
 
 export const isValidResult = Array.isArray;
 
@@ -7,13 +7,15 @@ export const resolveResult = obj => {
   if (obj.values) return obj.values;
 };
 
-export class ExamplesMapResolver extends MapResolver {
+export class ExamplesMapResolver extends TypeMapResolver {
   constructor(ctx = {}, config = {}) {
     super(ctx, config);
-    this.functions = {
-      ...this.functions,
-      isValidResult,
-      resolveResult
-    };
+    this.init({
+      mapName: "examples",
+      functions: {
+        isValidResult,
+        resolveResult
+      }
+    });
   }
 }
