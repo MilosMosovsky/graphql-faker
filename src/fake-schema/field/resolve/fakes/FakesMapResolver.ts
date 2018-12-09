@@ -1,4 +1,4 @@
-import { MapResolver } from "../MapResolver";
+import { TypeMapResolver } from "resolve-type-maps";
 
 export const isValidResult = value => {
   return typeof value === "string" || value.faker;
@@ -13,14 +13,15 @@ export const resolveResult = ({ value, key }: any = {}) => {
   return $default;
 };
 
-export class FakesMapResolver extends MapResolver {
+export class FakesMapResolver extends TypeMapResolver {
   constructor(ctx = {}, config = {}) {
-    super("fakes", ctx, config);
-    this.functions = {
-      ...this.functions,
-      // TODO: make configurable?
-      resolveResult,
-      isValidResult
-    };
+    super(ctx, config);
+    this.init({
+      mapName: "fakes",
+      functions: {
+        resolveResult,
+        isValidResult
+      }
+    });
   }
 }
