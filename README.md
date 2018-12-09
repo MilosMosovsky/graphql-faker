@@ -15,6 +15,10 @@ All you need is to write [GraphQL IDL](https://blog.graph.cool/graphql-sdl-schem
 In the GIF bellow we add fields to types inside real GitHub API and you can make queries from GraphiQL, Apollo, Relay, etc. and receive **real data mixed with mock data.**
 ![demo-gif](./docs/demo.gif)
 
+## Status
+
+This fork is a major extension of the [original](https://www.npmjs.com/package/graphql-faker) library. It has not yet been fully tested. Please help out!
+
 ## How does it work?
 
 We use `@fake` directive to let you specify how to fake data. And if 60+ fakers is not enough for you, just use `@examples` directive to provide examples. Use `@sample` directive to specify number of returned array items. Add a directive to any field or custom scalar definition:
@@ -176,6 +180,10 @@ yarn
 npm run build:all
 npm run start
 ```
+
+## Dependencies
+
+Uses [resolve-type-maps](https://github.com/kristianmandrup/resolve-type-maps) to resolve types/field to default values when directives not present
 
 ## Advanced usage
 
